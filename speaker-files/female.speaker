@@ -109,7 +109,7 @@
         <param name="HX" value="0.0000"/>
         <param name="HY" value="-4.1405"/>
         <param name="JX" value="-0.0500"/>
-        <param name="JA" value="-6.6859"/>
+        <param name="JA" value="-6.7359"/>
         <param name="LP" value="0.1706"/>
         <param name="LD" value="1.2785"/>
         <param name="VS" value="0.8511"/>
@@ -295,10 +295,10 @@
         <param name="TS3" value="-0.3720"/>
       </shape>
       <shape name="o_no-pf_mm-formants">
-        <param name="HX" value="0.0666"/>
-        <param name="HY" value="-4.7279"/>
+        <param name="HX" value="0.1000"/>
+        <param name="HY" value="-4.6779"/>
         <param name="JX" value="-0.0500"/>
-        <param name="JA" value="-3.6397"/>
+        <param name="JA" value="-3.6897"/>
         <param name="LP" value="0.7400"/>
         <param name="LD" value="0.1827"/>
         <param name="VS" value="0.8000"/>
@@ -310,7 +310,7 @@
         <param name="TBX" value="0.3947"/>
         <param name="TBY" value="0.4065"/>
         <param name="TRX" value="-1.4852"/>
-        <param name="TRY" value="-2.4745"/>
+        <param name="TRY" value="-2.5245"/>
         <param name="TS1" value="0.3160"/>
         <param name="TS2" value="0.2900"/>
         <param name="TS3" value="-0.3720"/>
