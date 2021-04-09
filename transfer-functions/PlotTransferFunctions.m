@@ -17,9 +17,9 @@ formantFilepath_female = 'multimodal/f__formants_MM.csv';
 
 
 %% 
-formants_male = table('Size', [0, 4], ...
-'VariableTypes', {'double', 'double', 'double', 'double'}, ...
-'VariableNames', {'F1', 'F2', 'F3', 'F4'});
+formants_male = table('Size', [0, 5], ...
+'VariableTypes', {'string', 'double', 'double', 'double', 'double'}, ...
+'VariableNames', {'sound', 'F1', 'F2', 'F3', 'F4'});
 formants_female = formants_male;
 
 
@@ -41,10 +41,11 @@ for file = tf_files'
     
     % Add first four formant values to table (one table for male, one file
     % for female
-    if file.name(1) == 'm'
-        formants_male = [formants_male; {F(1), F(2), F(3), F(4)}];
-    elseif file.name(1) == 'f'
-        formants_female = [formants_female; {F(1), F(2), F(3), F(4)}];
+    tokens = split(file.name, '_');
+    if tokens{1} == 'm'
+        formants_male = [formants_male; {tokens{2}, F(1), F(2), F(3), F(4)}];
+    elseif tokens{1} == 'f'
+        formants_female = [formants_female; {tokens{2}, F(1), F(2), F(3), F(4)}];
     end      
 end
 
