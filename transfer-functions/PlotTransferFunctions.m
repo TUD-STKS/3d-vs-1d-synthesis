@@ -11,7 +11,7 @@ tf_mm_files = dir('multimodal/*.txt');
 tf_vtl_files = dir('1d/*.txt');
 
 % Output
-save_formants = true;
+save_formants = false;
 mm_formantFilepath_male = 'multimodal/m__formants_MM.csv';
 mm_formantFilepath_female = 'multimodal/f__formants_MM.csv';
 vtl_formantFilepath_male = '1d/m__formants_1d.csv';
@@ -82,7 +82,7 @@ for file = tf_mm_files'
     
     %% Add legend
     h = get(gca, 'Children');
-    legend(findobj(h, 'Tag', 'Signal'), {'1d', 'multimodal'}, 'Location', 'southeast');
+    legend(findobj(h, 'Tag', 'Signal'), {'multimodal', '1d'}, 'Location', 'southeast');
     
 end
 
