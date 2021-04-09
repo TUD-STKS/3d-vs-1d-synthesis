@@ -51,8 +51,8 @@ end
 %% Write formants to file
 if save_formants
     disp('Writing formants to file...')
-    writetable(formants_male, formantFilepath_male)
-    writetable(formants_female, formantFilepath_female)
+    writetable(formants_male, formantFilepath_male, 'Delimiter',' ');
+    writetable(formants_female, formantFilepath_female, 'Delimiter',' ');
     disp('...done.')
 end
 
