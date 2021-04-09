@@ -1,0 +1,3 @@
+[submodule "include/bandwidth_extension"]
+	path = include/bandwidth_extension
+	url = https://github.com/bachhavpramod/bandwidth_extension.git

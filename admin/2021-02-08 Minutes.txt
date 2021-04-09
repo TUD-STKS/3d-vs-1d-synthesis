@@ -1,0 +1,23 @@
+Comparison VTL 1D vs. 3D
+
+8 vowels VVTF
+
+2 experiments:
+
+3 conditions:
+1: 3d multimodal method
+2: 3d multimodal method, bandlimited and then extended with BWE
+3: 1d VocalTractLab method with adapted vocal tract shapes to match the 3d multimodal method formants.
+
+Experiment A: 
+Q: Is there an perceptible difference between 3d-fullBw, 1d-BWE, 1d-VTL
+
+Experiment B:
+Q: Is 3d-fullBw or 1d-BWE or 1d-VTL prefered
+
+Generation of the excitation:
+KLGLOTT88 model
+Pitch-synchronous noise bursts (with high-pass filtered spectrum)
+Research some BWE algorithm that allows TF extension.
+
+

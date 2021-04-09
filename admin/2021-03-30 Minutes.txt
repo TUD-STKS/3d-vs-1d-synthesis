@@ -1,0 +1,42 @@
+Comparison VTL 1D vs. 3D
+
+5 vowels VVTF: /a/, /e/, /i/, /o/, /u/ (Mostly the same across multiple languages)
+5 from male, 5 from female vocal tract model
+=> 10 in total
+
+Side cavities removed in both methods! 
+Adapt 1d vocal tract shape to match formants of 3d multimodal method's formants.
+
+2 experiments:
+
+3 conditions:
+1: 3d multimodal method up to 10 kHz
+2: 1d VocalTractLab method, bandlimited to 5 kHz and then extended with BWE
+3: 1d VocalTractLab method up to 10 kHz (including physically incorrect formants >5kHz).
+
+Generation of the excitation:
+KLGLOTT88 model
+Pitch-synchronous noise bursts (with high-pass filtered spectrum)
+Research some BWE algorithm that allows TF extension.
+3 voice qualities: 
+(b)reathy, (m)odal, (p)ressed
+
+********************
+Possible research questions (details will be defined once we have listened to some examples):
+Pre-test: Is the difference between stimuli obvious?
+
+Experiment A: 
+Q: Is there a perceptible difference between 3d-fullBw, 1d-BWE, 1d-VTL
+Design:
+10 vowels -> 60 pairs (1 vs 1, 1 vs 2, 1 vs 3, 2 vs 3, 2 vs 2, 3 vs 3) per voice quality
+Experiment is run three times, once for each voice quality.
+
+Experiment B:
+Q: Is 3d-fullBw or 1d-BWE or 1d-VTL prefered
+********************
+
+Next steps:
+Peter adapts geometries to compensate the missing side cavities (by April 7)
+Rémi generates 3d simulations based on shapes w/o side cavities (by April 9)
+Simon adapts shapes w/o side cavities to match 3d formants (by April 13)
+Next meeting: April 20, 9 am (https://meet.jit.si/3d-synthesis-vs-1d)
