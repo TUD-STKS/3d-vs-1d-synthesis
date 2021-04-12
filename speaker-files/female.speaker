@@ -109,7 +109,7 @@
         <param name="HX" value="0.0000"/>
         <param name="HY" value="-4.1405"/>
         <param name="JX" value="-0.0500"/>
-        <param name="JA" value="-6.7359"/>
+        <param name="JA" value="-6.7859"/>
         <param name="LP" value="0.1706"/>
         <param name="LD" value="1.2785"/>
         <param name="VS" value="0.8511"/>
@@ -169,22 +169,22 @@
         <param name="TS3" value="0.3640"/>
       </shape>
       <shape name="e_no-pf_mm-formants">
-        <param name="HX" value="0.2476"/>
+        <param name="HX" value="0.2143"/>
         <param name="HY" value="-3.7641"/>
         <param name="JX" value="-0.1000"/>
-        <param name="JA" value="-4.2574"/>
+        <param name="JA" value="-4.3574"/>
         <param name="LP" value="-0.9500"/>
-        <param name="LD" value="1.0416"/>
-        <param name="VS" value="0.1000"/>
+        <param name="LD" value="0.9916"/>
+        <param name="VS" value="0.2000"/>
         <param name="VO" value="-0.1000"/>
-        <param name="TCX" value="1.7263"/>
+        <param name="TCX" value="1.7763"/>
         <param name="TCY" value="-0.5277"/>
-        <param name="TTX" value="4.0635"/>
+        <param name="TTX" value="4.1135"/>
         <param name="TTY" value="-1.0874"/>
         <param name="TBX" value="3.5819"/>
         <param name="TBY" value="-0.0697"/>
         <param name="TRX" value="-0.9892"/>
-        <param name="TRY" value="-0.9728"/>
+        <param name="TRY" value="-0.7228"/>
         <param name="TS1" value="0.6480"/>
         <param name="TS2" value="0.3800"/>
         <param name="TS3" value="0.3640"/>
@@ -233,11 +233,11 @@
       </shape>
       <shape name="i_no-pf_mm-formants">
         <param name="HX" value="0.6136"/>
-        <param name="HY" value="-4.1704"/>
+        <param name="HY" value="-4.2204"/>
         <param name="JX" value="0.0000"/>
-        <param name="JA" value="-4.5771"/>
-        <param name="LP" value="-0.6998"/>
-        <param name="LD" value="0.9716"/>
+        <param name="JA" value="-4.6271"/>
+        <param name="LP" value="-0.8498"/>
+        <param name="LD" value="1.2216"/>
         <param name="VS" value="0.0000"/>
         <param name="VO" value="-0.1000"/>
         <param name="TCX" value="1.8263"/>
@@ -246,8 +246,8 @@
         <param name="TTY" value="-1.1128"/>
         <param name="TBX" value="3.6836"/>
         <param name="TBY" value="0.5918"/>
-        <param name="TRX" value="-0.6078"/>
-        <param name="TRY" value="-1.2727"/>
+        <param name="TRX" value="-0.6578"/>
+        <param name="TRY" value="-1.1727"/>
         <param name="TS1" value="0.3040"/>
         <param name="TS2" value="0.0000"/>
         <param name="TS3" value="0.0500"/>
@@ -295,17 +295,17 @@
         <param name="TS3" value="-0.3720"/>
       </shape>
       <shape name="o_no-pf_mm-formants">
-        <param name="HX" value="0.1000"/>
+        <param name="HX" value="0.0666"/>
         <param name="HY" value="-4.6779"/>
         <param name="JX" value="-0.0500"/>
-        <param name="JA" value="-3.6897"/>
+        <param name="JA" value="-3.5897"/>
         <param name="LP" value="0.7400"/>
         <param name="LD" value="0.1827"/>
         <param name="VS" value="0.8000"/>
         <param name="VO" value="0.0000"/>
         <param name="TCX" value="-0.4381"/>
         <param name="TCY" value="-1.1128"/>
-        <param name="TTX" value="2.3061"/>
+        <param name="TTX" value="2.2061"/>
         <param name="TTY" value="-2.0164"/>
         <param name="TBX" value="0.3947"/>
         <param name="TBY" value="0.4065"/>
@@ -361,7 +361,7 @@
         <param name="HX" value="1.0000"/>
         <param name="HY" value="-5.1000"/>
         <param name="JX" value="0.0000"/>
-        <param name="JA" value="-4.7137"/>
+        <param name="JA" value="-4.6637"/>
         <param name="LP" value="0.6987"/>
         <param name="LD" value="0.1973"/>
         <param name="VS" value="0.0649"/>
@@ -369,11 +369,11 @@
         <param name="TCX" value="-0.1386"/>
         <param name="TCY" value="-0.7989"/>
         <param name="TTX" value="1.9535"/>
-        <param name="TTY" value="-1.3427"/>
+        <param name="TTY" value="-1.3927"/>
         <param name="TBX" value="1.4879"/>
         <param name="TBY" value="0.0798"/>
-        <param name="TRX" value="-1.5058"/>
-        <param name="TRY" value="-2.2314"/>
+        <param name="TRX" value="-1.5558"/>
+        <param name="TRY" value="-2.1814"/>
         <param name="TS1" value="0.2460"/>
         <param name="TS2" value="0.1000"/>
         <param name="TS3" value="0.0260"/>
