@@ -3,7 +3,7 @@
 clc; close all; clearvars;
 addpath('../include')
 addpath('../include/bandwidth_extension')
-
+addpath('../include/sap-voicebox/voicebox')
 
 %% Transfer functions
 tf_mm_files = dir('../transfer-functions/multimodal/*.txt');
@@ -11,7 +11,9 @@ tf_vtl_files = dir('../transfer-functions/1d/*.txt');
 
 %% Stimulus file path
 outpath = './dev/';
-
+if ~exist(outpath, 'dir')
+    mkdir(outpath)
+end
 %% Parameters
 % Initial and final silence
 global sil_s;
