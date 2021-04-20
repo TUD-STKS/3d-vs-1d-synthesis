@@ -14,9 +14,16 @@ function [Ug, t] = get_excitation(f0, Fs, silence_s, fade, oversampling)
 % Generate glottal flow 
 Ug = [];
 idx = 1;
+
+te = 0.60;
+tp = 0.48;
+ta = 0.0109;
+tc = 0.5072;
+params = [te, tp, ta, tc];
+
 while idx <= length(f)
     % Get one period of glottal flow
-    U0 = glottal_flow_lf(f(idx), Fs, oversampling, 1/f(idx));
+    U0 = glottal_flow_lf(f(idx), Fs, oversampling, 1/f(idx), params);
     Ug = [Ug; U0];
     idx = length(Ug)+1;
 end

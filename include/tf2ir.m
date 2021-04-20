@@ -9,7 +9,7 @@ if any(tf(2:end) ~= conj(tf(end:-1:2)))
     tf = [tf; conj(tf(end:-1:2))];
 end
 
-it = ifft(tf);
+it = ifft(tf, 'symmetric');
 
 end
 
