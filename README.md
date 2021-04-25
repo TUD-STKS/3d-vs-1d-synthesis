@@ -6,5 +6,5 @@ A study on the impact of different methods to produce the high-frequency compone
 Settings for VocalTractLab transfer function calculation:
 Radiation impedance: Piston in wall
 Additional options: all OFF
-Energy losses: Boundary layer resistance ON, head conduction losses ON, Soft Walls ON, Hagen-Poiseuille resistance OFF
+Energy losses: Boundary layer resistance ON, heat conduction losses ON, Soft Walls ON, Hagen-Poiseuille resistance OFF
 

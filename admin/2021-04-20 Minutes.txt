@@ -1,0 +1,35 @@
+Rémi:
+	/o/ sound synthesis not yet possible because of branching where the tongue touches the uvula
+	suggested workaround: Move tongue slightly so that it no longer touches the uvula
+	
+Simon: 
+	Vocal tract shapes are adapted for everything except male /o/	
+	Very little adaptation was necessary because the match was already very close
+	But perceptually worse stimuli after synthesis
+	MM stimuli sound better 
+	-> Decrease bandwidth in MM transfer functions to reduce difference of the TF troughs!
+
+Stimuli:
+	female /i/ and /o/ are not clear
+	impulse response is non-causal because of unknown (numerical?) issues
+	window impulse response with a Hamming halfwindow?
+
+
+To Do:
+Simon: 
+- Give Angelique access to the GitHub Repo
+- Send out contrastive samples of sounds pre and post VT shape optimization
+- Extending TF to full spectrum: Fade out frequencies to zero, add zeros to get to a power of 2
+
+Rémi: 
+- Modify the cross-section at the uvula to add a fistula between the two channels
+- Decrease bandwidth of formants in MM transfer function to better match the troughs of the 1d TF
+- Modify /o/ and /i/ to sound more accurately identifiable
+
+Angelique:
+- Modify /o/ and /i/ to sound more accurately identifiable
+
+Next meeting:
+May, 4th, 2021, BigBlueButton
+
+

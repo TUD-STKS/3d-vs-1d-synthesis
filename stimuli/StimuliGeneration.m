@@ -5,6 +5,8 @@ addpath('../include')
 addpath('../include/bandwidth_extension')
 addpath('../include/sap-voicebox/voicebox')
 
+load('lp-fc_10800Hz-fs_44100Hz.mat');
+
 %% Transfer functions
 tf_mm_files = dir('../transfer-functions/multimodal/*.txt');
 tf_vtl_files = dir('../transfer-functions/1d/*.txt');
@@ -56,7 +58,10 @@ plot(tfemale, Ug.female)
 % response
 playlist = [];
 for file = tf_vtl_files'
-    [f_Hz, tf] = read_tf(file, false);
+    [tf, f_Hz] = read_tf(file, false);
+    tf = padarray(tf, [4096-length(tf), 0], 'post');
+    tf = fillmissing(tf, 'linear');
+    tf = tf .* freqz(LP_10800, 4096);
     tokens = split(file.name, '_');
     if tokens{1} == 'm'
         y = synthesize_from_tf(Ug.male, tf);
@@ -67,24 +72,24 @@ for file = tf_vtl_files'
     name = [item_name, '_base', '.wav'];
     filename = fullfile(outpath, name);
     writewav(filename, y, Fs_out);
-    playlist = [playlist; name];
+    playlist = [playlist; string(name)];
 end
 
-%% Multimodal method baseline
-for file = tf_mm_files'
-    [f_Hz, tf] = read_tf(file, true);
-    tokens = split(file.name, '_');
-    if tokens{1} == 'm'
-        y = synthesize_from_tf(Ug.male, tf);
-    elseif tokens{1} == 'f'
-        y = synthesize_from_tf(Ug.female, tf);
-    end
-    [~, item_name, ~] = fileparts(file.name);
-    name = [item_name, '_base', '.wav'];
-    filename = fullfile(outpath, name);
-    writewav(filename, y, Fs_out);
-    playlist = [playlist; name];
-end
+% %% Multimodal method baseline
+% for file = tf_mm_files'
+%     [tf, f_Hz] = read_tf(file, true);
+%     tokens = split(file.name, '_');
+%     if tokens{1} == 'm'
+%         y = synthesize_from_tf(Ug.male, tf);
+%     elseif tokens{1} == 'f'
+%         y = synthesize_from_tf(Ug.female, tf);
+%     end
+%     [~, item_name, ~] = fileparts(file.name);
+%     name = [item_name, '_base', '.wav'];
+%     filename = fullfile(outpath, name);
+%     writewav(filename, y, Fs_out);
+%     playlist = [playlist; name];
+% end
 
 %% Write the playlist file
 writetable(table(playlist), './dev/stimuli.m3u', ...
