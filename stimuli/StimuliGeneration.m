@@ -59,7 +59,7 @@ plot(tfemale, Ug.female)
 % response
 playlist = [];
 for file = tf_vtl_files'
-    [tf, f_Hz] = read_tf(file, false);
+    [tf, f_Hz] = read_tf(file);
     tf = tf .* freqz(H_lp, length(tf), 'whole');
     tokens = split(file.name, '_');
     if tokens{1} == 'm'
@@ -74,9 +74,10 @@ for file = tf_vtl_files'
     playlist = [playlist; string(name)];
 end
 
-% %% Multimodal method baseline
+%% Multimodal method baseline
 % for file = tf_mm_files'
-%     [tf, f_Hz] = read_tf(file, true);
+%     [tf, f_Hz] = read_tf(file);
+%     %tf = tf .* freqz(H_lp, length(tf));
 %     tokens = split(file.name, '_');
 %     if tokens{1} == 'm'
 %         y = synthesize_from_tf(Ug.male, tf);
