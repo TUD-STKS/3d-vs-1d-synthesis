@@ -98,7 +98,7 @@ end
 
 %%
 function [pks, F] = plotTransferFunctionAndFindFormants(tf, fc_hi)
-   [pks, F] = findpeaks(db(tf.mag(tf.f_Hz < fc_hi)), tf.f_Hz(tf.f_Hz < fc_hi));
+    [pks, F] = findpeaks(db(tf.mag(tf.f_Hz < fc_hi)), tf.f_Hz(tf.f_Hz < fc_hi));
     findpeaks(db(tf.mag(tf.f_Hz < fc_hi)), tf.f_Hz(tf.f_Hz < fc_hi));
     text(F, pks + 3, num2str(F))
     xlabel('Frequency [Hz]');

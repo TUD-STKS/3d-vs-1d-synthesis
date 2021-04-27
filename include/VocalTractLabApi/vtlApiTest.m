@@ -1,8 +1,9 @@
 %% Testing the MATLAB wrapper for the VTL API
+clearvars;
 %% Get transfer function
-vtlinit('../../speaker-files/male.speaker');
-
-opts = vtltfopts();
+addpath('..')
+vtl = VTL('../../speaker-files/female.speaker');
+opts = vtl.opts();
 opts.type = 'SPECTRUM_PU';
 opts.radiation = 'PISTONINWALL_RADIATION';
 opts.paranasalSinuses = false;
@@ -15,13 +16,14 @@ opts.heatConduction = true;
 opts.softWalls = true;
 opts.hagenResistance = false;
 
-pu = vttf(vtshape('a_no-pf_mm-formants'), 4096, opts);
-vtlclose();
+[pu,f] = vtl.get_transfer_function(vtl.get_tract_params_from_shape('a_no-pf_mm-formants'), 4096, opts);
+plot(f, abs(pu))
 
 %% Low-pass filter transfer function in the frequency domain 
 % to get rid of ringing from boxcar window
-h_LP =  freqz(LP_10000, 4096, 'whole');
-pu_filtered = conj(pu) .* h_LP;
+load('lp-fc_10kHz-fs_44p1kHz.mat');
+h_lp =  freqz(H_lp, 4096, 'whole');
+pu_filtered = pu .* h_lp;
 subplot(2,1,1)
 f = linspace(0, 44100, 4096);
 plot(f, abs(pu), '--'); hold on;

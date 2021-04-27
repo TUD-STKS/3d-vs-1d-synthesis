@@ -4,8 +4,9 @@ clc; close all; clearvars;
 addpath('../include')
 addpath('../include/bandwidth_extension')
 addpath('../include/sap-voicebox/voicebox')
+addpath('../include/VocalTractLabApi')
 
-load('lp-fc_10800Hz-fs_44100Hz.mat');
+load('lp-fc_10kHz-fs_44p1kHz.mat');
 
 %% Transfer functions
 tf_mm_files = dir('../transfer-functions/multimodal/*.txt');
@@ -59,9 +60,7 @@ plot(tfemale, Ug.female)
 playlist = [];
 for file = tf_vtl_files'
     [tf, f_Hz] = read_tf(file, false);
-    tf = padarray(tf, [4096-length(tf), 0], 'post');
-    tf = fillmissing(tf, 'linear');
-    tf = tf .* freqz(LP_10800, 4096);
+    tf = tf .* freqz(H_lp, length(tf), 'whole');
     tokens = split(file.name, '_');
     if tokens{1} == 'm'
         y = synthesize_from_tf(Ug.male, tf);
