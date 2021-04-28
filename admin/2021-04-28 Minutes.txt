@@ -1,0 +1,28 @@
+
+Issue:
+Which low-frequency part is "correct"? Should equal low-frequency components be enforced (formant values, bandwidths).
+
+Suggestion:
+Do frequency blending:
+- C1: Use full band multimodal transfer function as baseline
+- C2: Substitute high frequency components with 1d high frequency part
+- C3: Substitute high frequency components with bandwidth extension
+Experiment 1 - null-hypothesis: There is no perceptable difference depending on the generation method of the HF components.
+Experiment 2 - Preference A/B experiment comparing the three conditions
+
+Issue:
+Level difference between 1d and 3d transfer functions
+
+Suggestion:
+Filter transfer functions (3d and 1d) to low-frequency part -> transform to impulse response -> calculate energy of ir -> calculate the ratio of energies -> use ratio in the frequency domain on the entire transfer function.
+
+
+To Do:
+
+Rémi:
+Export full transfer functions
+
+Simon:
+Window the transfer function's magnitude using a half cosine-tapered window instead of proper filter.
+Blend 3d and 1d transfer functions around 10 kHz using same cosine-tapered window.
+
