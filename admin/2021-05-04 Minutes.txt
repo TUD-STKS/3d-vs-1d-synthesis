@@ -1,0 +1,36 @@
+1. Question for the second experiment is to vague
+- "Which sound sounds more like a human?"
+- Angélique will come back with some suggestions next time
+
+2. Adaptation of the vocal tract shapes /i/, /o/, /u/
+- The vocal tract shapes originally adapted by Peter are fine. Since we now do not adapt the shapes to the MM formants anymore, we do not need to worry about those anymore.
+- Using the shapes adapated by Peter going forward.
+
+3. Why these sounds?
+- Tense vowels that are present in many languages (lax vowels are hard to identify when isolated)
+- Fricatives depend a lot on the noise source models
+- Frequency-domain simulation of fricatives is difficult to control and it is unclear what would influence the overall perception
+
+4. What is more important for natural sounding synthetic voices?
+- All voice qualities are important, but voiced parts may be more important than unvoiced
+
+5. Plan going forward:
+- Full multimodal method transfer function as a baseline
+
+6. Filter vs window method to limit transfer functions:
+- Use filter method going forward
+
+7. Excitation:
+- Use Gaussian distributed aspiration noise, find out amplitude from literature
+- Add offset of 1/3 of peak-to-peak flow signal
+
+To Do Simon:
+- Blending of the transfer functions
+- Finish voice source implementation using paramters researched by Rémi
+
+To Do Rémi:
+- Figure out proper source Liljencrants-Fant parameters for breathy voice
+- Figure out proper aspiration noise amplitude
+
+Next date: Tuesday, May 18, 14:30
+

@@ -1,8 +1,10 @@
-function [Ug, t] = get_excitation(f0, Fs, silence_s, fade, oversampling)
+function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling)
 %GET_EXCITATION This function returns a glottal flow signal with a
 %specified f0 contour, voice quality, padded silence, and fade-in and out.
 %   Fs: Sampling rate
 %   f0: Fundamental frequency contour specified as a matrix. First column
+%   dc: Amplitude of the DC component of the flow, relative to the maximum
+%   amplitude.
 %   is time instants, second column is the corresponding f0 values.
 %   The specified values are interpolated using clamped spline
 %   interpolation
@@ -27,6 +29,10 @@ while idx <= length(f)
     Ug = [Ug; U0];
     idx = length(Ug)+1;
 end
+
+% Add DC component
+flow_dc = dc * max(Ug);
+Ug = flow_dc + Ug;
 
 % Fade-in and out
 Ug = Ug .* tukeywin(length(Ug), fade*2);

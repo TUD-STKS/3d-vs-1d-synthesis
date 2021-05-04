@@ -23,7 +23,7 @@ elseif sex == "f"
     vtl = VTL('../speaker-files/female.speaker');
 end
     
-opts = vtl.opts();
+opts = vtl.default_transfer_function_options();
 opts.type = 'SPECTRUM_PU';
 opts.radiation = 'PISTONINWALL_RADIATION';
 opts.paranasalSinuses = false;
