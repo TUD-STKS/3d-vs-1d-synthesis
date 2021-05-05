@@ -2,7 +2,7 @@
 
 clc; close all; clearvars;
 addpath('../include')
-addpath('../include/bandwidth_extension')
+% addpath('../include/bandwidth_extension')
 addpath('../include/sap-voicebox/voicebox')
 addpath('../include/VocalTractLabApi')
 
@@ -59,28 +59,28 @@ plot(tfemale, Ug.female)
 % response
 playlist = [];
 
-for file = tf_vtl_files'
-    [tf, f_Hz] = read_tf(file);
-    % The transfer functions are filtered to reduce ringing in the impulse
-    % response
-    tf = tf .* freqz(H_lp, length(tf), 'whole');
-    tokens = split(file.name, '_');
-    if tokens{1} == 'm'
-        y = synthesize_from_tf(Ug.male, tf);
-    elseif tokens{1} == 'f'
-        y = synthesize_from_tf(Ug.female, tf);
-    end
-    [~, item_name, ~] = fileparts(file.name);
-    name = [item_name, '_base', '.wav'];
-    filename = fullfile(outpath, name);
-    writewav(filename, y, Fs_out);
-    playlist = [playlist; string(name)];
-end
+% for file = tf_vtl_files'
+%     [tf, f_Hz] = read_tf(file);
+%     % The transfer functions are filtered to reduce ringing in the impulse
+%     % response
+%     tf = tf .* freqz(H_lp, length(tf), 'whole');
+%     tokens = split(file.name, '_');
+%     if tokens{1} == 'm'
+%         y = synthesize_from_tf(Ug.male, tf);
+%     elseif tokens{1} == 'f'
+%         y = synthesize_from_tf(Ug.female, tf);
+%     end
+%     [~, item_name, ~] = fileparts(file.name);
+%     name = [item_name, '_base', '.wav'];
+%     filename = fullfile(outpath, name);
+%     writewav(filename, y, Fs_out);
+%     playlist = [playlist; string(name)];
+% end
 
 %% Multimodal method baseline
 for file = tf_mm_files'
     [tf, f_Hz] = read_tf(file);
-    tf = tf .* freqz(H_lp, length(tf));
+%     tf = tf .* freqz(H_lp, length(tf));
     tokens = split(file.name, '_');
     if tokens{1} == 'm'
         y = synthesize_from_tf(Ug.male, tf);
