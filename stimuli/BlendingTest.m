@@ -2,6 +2,7 @@
 
 clc; close all; clearvars;
 addpath('../include')
+load('filters.mat')
 
 %% Load some transfer functions
 [f_1d, f_Hz] = read_tf('../transfer-functions/1d/f_a_1d.txt');
@@ -9,11 +10,18 @@ addpath('../include')
 [f_mm, f3_Hz] = read_tf('../transfer-functions/multimodal/f_a_MM.txt');
 [m_mm, f4_Hz] = read_tf('../transfer-functions/multimodal/m_a_MM.txt');
 
+%% Low-pass filter both transfer functions at 20 kHz
+f_1d = f_1d .* freqz(H_AA, length(f_1d), 'whole');
+m_1d = m_1d .* freqz(H_AA, length(m_1d), 'whole');
+f_mm = f_mm .* freqz(H_AA, length(f_mm), 'whole');
+m_mm = m_mm .* freqz(H_AA, length(m_mm), 'whole');
+
+
 %% Blending
 figure(1);
-blend_tf(f_Hz, f_mm, f_1d, 9500, 10500)
+blend_tf(f_Hz, f_mm, f_1d, H_lp, H_hp)
 title('female /a/');
 
 figure(2);
-blend_tf(f_Hz, m_mm, m_1d, 9500, 10500)
+blend_tf(f_Hz, m_mm, m_1d, H_lp, H_hp)
 title('male /a/');
