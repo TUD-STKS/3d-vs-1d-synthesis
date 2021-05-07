@@ -30,7 +30,7 @@ Run the script `transfer-functions/PlotTransferFunctions.m` to compare the 1d an
 Run `stimuli/BlendingTest.m` to visualize two examples (one male, one female) of the transfer function blending.
 Run the script `stimuli/CompareSpectrograms.m` to visualize the spectrograms of all synthesized utterances side-by-side.
 
-See the folder `docs` for some pre-generated figures.
+See the folder `doc` for some pre-generated figures.
 
 
 
