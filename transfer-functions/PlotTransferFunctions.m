@@ -4,7 +4,7 @@ clc; close all; clearvars;
 addpath('../include')
 
 %% Parameters
-fc_hi = 5e3;  % Upper cutoff frequency for transfer function display
+fc_hi = 10e3;  % Upper cutoff frequency for transfer function display
 
 % Input
 tf_mm_files = dir('multimodal/*.txt');

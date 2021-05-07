@@ -1,7 +1,7 @@
 clc; close all; clearvars;
 addpath('../include')
 
-load('lp-fc_10kHz-fs_44p1kHz.mat');
+load('filters.mat');
 
 %% Load some transfer functions
 [f_1d, f_Hz] = read_tf('../transfer-functions/1d/f_a_1d.txt');
