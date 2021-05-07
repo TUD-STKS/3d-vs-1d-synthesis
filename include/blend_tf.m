@@ -29,13 +29,14 @@ else
     H_hp = abs(freqz(H_hp, length(blended_tf), 'whole'));
     plot(f_Hz(1:length(blended_tf)/2), H_lp(1:length(blended_tf)/2), ':');
     plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2)), ':';
+    plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2) + H_lp(1:length(blended_tf)/2), ':');
     hold off;
     xlabel('Frequency $f$ [Hz]')
     yyaxis left;
     ylabel('Magnitude')
     yyaxis right;
     ylim([0, 2]);
-    ylabel('Filter response')
+    ylabel('Filter responses and their sum')
     
 end
 

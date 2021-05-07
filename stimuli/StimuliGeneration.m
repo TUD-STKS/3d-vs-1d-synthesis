@@ -2,7 +2,7 @@
 
 clc; close all; clearvars;
 addpath('../include')
-% addpath('../include/bandwidth_extension')
+addpath('../include/bandwidth_extension')
 addpath('../include/sap-voicebox/voicebox')
 addpath('../include/VocalTractLabApi')
 
@@ -33,20 +33,14 @@ dur_s = 0.5;
 f0.male = 100;
 f0.female = 200;
 
-% Blending interval
-fb_start = 9500;
-fb_end = 10500;
-
 % Sampling rates
 oversampling = 4;
-Fs_base = 44100;
-Fs_nb = 8000;
 Fs_wb = 16000;
 Fs_swb = 32000;
 Fs_mm = 44100;
 % Sampling rate of the output stimulus files
 global Fs_out;
-Fs_out = max([Fs_base, Fs_nb, Fs_wb, Fs_swb, Fs_mm]);
+Fs_out = Fs_mm;
 
 %% Excitation
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
@@ -81,6 +75,20 @@ for file = tf_mm_files'
     writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
     playlist{end+1} = name;
     
+    %% Replace high-frequencey range by bandwidth extension
+    % Limit the fullband sample to 8 kHz by resampling at 16 kHz
+    % (including AA low pass and delay compensation)
+    [y, fs] = audioread(filename);
+    y = resample(y, Fs_wb, fs);
+    % Extend to 16 kHz cutoff (also changes the sampling rate to 32 kHz
+    y = extend_to_16kHz(y);
+    % Upsample to 44.1 kHz;
+    y = resample(y, Fs_out, Fs_swb);
+    name = [item_name, '_bwe', '.wav'];
+    filename = fullfile(outpath, name);
+    writewav(filename, normalizeLoudness(y, Fs_out), Fs_out);
+    playlist{end+1} = name;    
+    
     %% Replace high-frequency range with 1d transfer function
     % Find corresponding 1d transfer function
     tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
@@ -95,7 +103,7 @@ for file = tf_mm_files'
     name = [item_name, '_1d', '.wav'];
     filename = fullfile(outpath, name);
     writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
-    playlist{end+1} = name;    
+    playlist{end+1} = name;        
 end
 
 %% Write the playlist file
