@@ -36,12 +36,14 @@ else
     tf_high = padarray(abs(tf_high), length(tf_low) - length(f_Hz), 0, 'post');
     plot(f_Hz(1:length(blended_tf)/2), tf_low(1:length(blended_tf)/2), '--');
     plot(f_Hz(1:length(blended_tf)/2), tf_high(1:length(blended_tf)/2), ':');    
-%     yyaxis right;
-%     H_lp = abs(freqz(H_lp, length(blended_tf), 'whole'));
-%     H_hp = abs(freqz(H_hp, length(blended_tf), 'whole'));
-%     plot(f_Hz(1:length(blended_tf)/2), H_lp(1:length(blended_tf)/2), ':');
-%     plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2)), ':';
-%     plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2) + H_lp(1:length(blended_tf)/2), ':');
+    yyaxis right;
+    % Get the SOS filter coefficients for the crossover filters
+    [b_lp, a_lp, b_hp, a_hp] = getFilterCoefficients(blendFilter, 1);
+    H_lp = abs(freqz([b_lp, a_lp], length(blended_tf), 'whole'));
+    H_hp = abs(freqz([b_hp, a_hp], length(blended_tf), 'whole'));
+    plot(f_Hz(1:length(blended_tf)/2), H_lp(1:length(blended_tf)/2), ':');
+    plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2)), ':';
+    plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2) + H_lp(1:length(blended_tf)/2), ':');
     hold off;
     xlabel('Frequency $f$ [Hz]')
 %     yyaxis left;

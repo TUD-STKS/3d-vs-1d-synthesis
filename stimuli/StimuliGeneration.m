@@ -35,6 +35,7 @@ f0.female = 200;
 
 % Sampling rates
 oversampling = 4;
+Fs_nb = 8000;
 Fs_wb = 16000;
 Fs_swb = 32000;
 Fs_mm = 44100;
@@ -43,7 +44,7 @@ global Fs_out;
 Fs_out = Fs_mm;
 
 % Inflection frequency (where the dominant transfer function changes) in Hz
-Finf = 5000;
+Finf = 4000;
 
 %% Excitation
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
@@ -78,11 +79,13 @@ for file = tf_mm_files'
     writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
     playlist{end+1} = name;
     
-    %% Replace high-frequencey range by bandwidth extension
-    % Limit the fullband sample to 8 kHz by resampling at 16 kHz
-    % (including AA low pass and delay compensation)
+    %% Replace high-frequency range by bandwidth extension
     [y, fs] = audioread(filename);
-    y = resample(y, Fs_wb, fs);
+    % Limit the fullband sample to 4 kHz by resampling at 8 kHz
+    % (including AA low pass and delay compensation)
+    y = resample(y, Fs_nb, fs);
+    % Extend to 8 kHz cutoff (also changes the sampling rate to 16 kHz
+    y = extend_to_8kHz(y);
     % Extend to 16 kHz cutoff (also changes the sampling rate to 32 kHz
     y = extend_to_16kHz(y);
     % Upsample to 44.1 kHz;

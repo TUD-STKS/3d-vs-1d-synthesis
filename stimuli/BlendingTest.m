@@ -5,7 +5,7 @@ addpath('../include')
 load('filters.mat')
 
 %%
-f_inf = 5000;  % Inflection frequency where the dominating transfer function changes
+f_inf = 4000;  % Inflection frequency where the dominating transfer function changes
 Fs_Hz = 44100;
 
 %% Load some transfer functions
