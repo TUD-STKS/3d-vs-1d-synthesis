@@ -1,3 +1,6 @@
 [submodule "include/sap-voicebox"]
 	path = include/sap-voicebox
-	url = https://github.com/ImperialCollegeLondon/sap-voicebox
+	url = https://github.com/nullpunktTUD/bandwidth_extension.git
+[submodule "include/bandwidth_extension"]
+	path = include/bandwidth_extension
+	url = https://github.com/nullpunktTUD/bandwidth_extension.git
