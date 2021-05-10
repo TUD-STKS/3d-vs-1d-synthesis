@@ -22,7 +22,7 @@ The full-bandwidth transfer functions calculated using the multimodal method are
 For the 1d condition, the MM transfer function is low-pass filtered and combined with the high-pass filtered 1d transfer function.
 
 ## BWE condition
-For the BWE condition, the synthesized MM sounds are low-pass filtered at 8 kHz and downsampled to 16 kHz. Then, the acoustic signal is upsampled to 32 kHz and its frequency content is extended to 16 kHz.
+For the BWE condition, the synthesized MM sounds are low-pass filtered at 4 kHz and downsampled to 8 kHz. Then, the acoustic signal is upsampled to 32 kHz and its frequency content is extended to 16 kHz. This happens in two steps (8 kHz -> 16 kHz -> 32 kHz).
 Finally, the utterance is upsampled to 44.1 kHz to match the sampling rate of the other stimuli.
 
 # Methods
