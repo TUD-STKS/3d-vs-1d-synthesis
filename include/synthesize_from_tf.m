@@ -13,5 +13,7 @@ function y = synthesize_from_tf(x, tf)
 h = tf2ir(tf);
 y = conv(x, h, 'same');
 
+% Compensate the time shift from the convolution
+y = circshift(y, length(h)/2);
 end
 

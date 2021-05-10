@@ -5,6 +5,7 @@ addpath('../include')
 stimuli_files = dir('dev/*.wav');
 
 for file = stimuli_files'
+    fprintf("Processing %s...", file.name);
     [y, Fs] = audioread(fullfile(file.folder, file.name));
     
     tokens = split(file.name, '_');
@@ -31,8 +32,11 @@ for file = stimuli_files'
         ylabel("Frequency [kHz]");
     end
     title("/" + tokens{2} + "/, MM low, " + tokens{end}(1:end-4) + " high");
+    fprintf("done.\n");
 end
 figure(1)
 sgtitle(fullgender(1));
 figure(2)
 sgtitle(fullgender(2));
+
+fprintf("All done.\n");

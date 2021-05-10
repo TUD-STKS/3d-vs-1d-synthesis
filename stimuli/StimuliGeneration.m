@@ -53,15 +53,16 @@ contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
 % Glottal flow signals using the LF model
 [Ug.male, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling);
 [Ug.female, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling);
-figure(1);
-subplot(2,1,1);
-plot(tmale, Ug.male)
-subplot(2,1,2);
-plot(tfemale, Ug.female)
+% figure(1);
+% subplot(2,1,1);
+% plot(tmale, Ug.male)
+% subplot(2,1,2);
+% plot(tfemale, Ug.female)
 
 %% Synthesize
 playlist = {};
 for file = tf_mm_files'
+    fprintf("Processing %s...", file.name);
     [tf_mm, f_Hz] = read_tf(file);
     % Low pass at 20 kHz
 	tf_mm = tf_mm .* freqz(H_AA, length(tf_mm), 'whole');
@@ -89,7 +90,10 @@ for file = tf_mm_files'
     % Extend to 16 kHz cutoff (also changes the sampling rate to 32 kHz
     y = extend_to_16kHz(y);
     % Upsample to 44.1 kHz;
-    y = resample(y, Fs_out, Fs_swb);
+    y = resample(y, Fs_out, Fs_swb);  
+    % Get rid of artifacts in the silent parts by windowing
+    y = cleanupBweSignal(y, sil_s * Fs_out); 
+    
     name = [item_name, '_bwe', '.wav'];
     filename = fullfile(outpath, name);
     writewav(filename, normalizeLoudness(y, Fs_out), Fs_out);
@@ -109,8 +113,11 @@ for file = tf_mm_files'
     name = [item_name, '_1d', '.wav'];
     filename = fullfile(outpath, name);
     writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
-    playlist{end+1} = name;        
+    playlist{end+1} = name;    
+    
+    fprintf("done.\n");
 end
+fprintf("All done.\n");
 
 %% Write the playlist file
 writetable(table(playlist'), './dev/stimuli.m3u', ...
