@@ -1,6 +1,13 @@
 # 3d-vs-1d-synthesis
 A study on the impact of different methods to produce the high-frequency component of synthetic speech spectra.
 
+# Dependencies
+The following additional toolboxes are required to run the code without any further modifications: 
+- Audio Toolbox
+- DSP System Toolbox
+- Image Processing Toolbox
+- Signal Processing Toolbox
+
 # Getting started
 This repo contains submodule and you therefore need to clone it using the following command:
 ```
