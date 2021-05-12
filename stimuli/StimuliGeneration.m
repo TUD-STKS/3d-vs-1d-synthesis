@@ -47,12 +47,21 @@ Fs_out = Fs_mm;
 Finf = 4000;
 
 %% Excitation
+voice_qualities = {'modal', 'breathy', 'harsh'};
+n_vq = length(voice_qualities);
+
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
 contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
 
 % Glottal flow signals using the LF model
-[Ug.male, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling);
-[Ug.female, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling);
+Ug.male = [];
+Ug.female = [];
+for vq = 1 : n_vq
+    [ug, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq});
+    Ug.male = [Ug.male, ug];
+    [ug, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq});
+    Ug.female = [Ug.female, ug];
+end
 % figure(1);
 % subplot(2,1,1);
 % plot(tmale, Ug.male)
@@ -68,52 +77,56 @@ for file = tf_mm_files'
 	tf_mm = tf_mm .* freqz(H_AA, length(tf_mm), 'whole');
     tokens = split(file.name, '_');
     
-    %% Generate baseline (multimodal, full bandwidth)
-    if tokens{1} == 'm'
-        y = synthesize_from_tf(Ug.male, tf_mm);
-    elseif tokens{1} == 'f'
-        y = synthesize_from_tf(Ug.female, tf_mm);
+    for vq = 1:n_vq
+        fprintf(" %s ", voice_qualities{vq});
+        %% Generate baseline (multimodal, full bandwidth)
+
+        if tokens{1} == 'm'
+            y = synthesize_from_tf(Ug.male(:,vq), tf_mm);
+        elseif tokens{1} == 'f'
+            y = synthesize_from_tf(Ug.female(:,vq), tf_mm);
+        end
+        [~, item_name, ~] = fileparts(file.name);
+        name = [item_name, '_MM_', voice_qualities{vq}, '.wav'];
+        filename = fullfile(outpath, name);
+        writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
+        playlist{end+1} = name;
+    
+        %% Replace high-frequency range by bandwidth extension
+        [y, fs] = audioread(filename);
+        % Limit the fullband sample to 4 kHz by resampling at 8 kHz
+        % (including AA low pass and delay compensation)
+        y = resample(y, Fs_nb, fs);
+        % Extend to 8 kHz cutoff (also changes the sampling rate to 16 kHz
+        y = extend_to_8kHz(y);
+        % Extend to 16 kHz cutoff (also changes the sampling rate to 32 kHz
+        y = extend_to_16kHz(y);
+        % Upsample to 44.1 kHz;
+        y = resample(y, Fs_out, Fs_swb);  
+        % Get rid of artifacts in the silent parts by windowing
+        y = cleanupBweSignal(y, sil_s * Fs_out); 
+
+        name = [item_name, '_bwe_', voice_qualities{vq}, '.wav'];
+        filename = fullfile(outpath, name);
+        writewav(filename, normalizeLoudness(y, Fs_out), Fs_out);
+        playlist{end+1} = name;    
+
+        %% Replace high-frequency range with 1d transfer function
+        % Find corresponding 1d transfer function
+        tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
+        % Low pass at 20 kHz
+        tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
+        tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
+        if tokens{1} == 'm'
+            y = synthesize_from_tf(Ug.male(:,vq), tf_blend);
+        elseif tokens{1} == 'f'
+            y = synthesize_from_tf(Ug.female(:,vq), tf_blend);
+        end
+        name = [item_name, '_1d_', voice_qualities{vq}, '.wav'];
+        filename = fullfile(outpath, name);
+        writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
+        playlist{end+1} = name;    
     end
-    [~, item_name, ~] = fileparts(file.name);
-    name = [item_name, '_MM', '.wav'];
-    filename = fullfile(outpath, name);
-    writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
-    playlist{end+1} = name;
-    
-    %% Replace high-frequency range by bandwidth extension
-    [y, fs] = audioread(filename);
-    % Limit the fullband sample to 4 kHz by resampling at 8 kHz
-    % (including AA low pass and delay compensation)
-    y = resample(y, Fs_nb, fs);
-    % Extend to 8 kHz cutoff (also changes the sampling rate to 16 kHz
-    y = extend_to_8kHz(y);
-    % Extend to 16 kHz cutoff (also changes the sampling rate to 32 kHz
-    y = extend_to_16kHz(y);
-    % Upsample to 44.1 kHz;
-    y = resample(y, Fs_out, Fs_swb);  
-    % Get rid of artifacts in the silent parts by windowing
-    y = cleanupBweSignal(y, sil_s * Fs_out); 
-    
-    name = [item_name, '_bwe', '.wav'];
-    filename = fullfile(outpath, name);
-    writewav(filename, normalizeLoudness(y, Fs_out), Fs_out);
-    playlist{end+1} = name;    
-    
-    %% Replace high-frequency range with 1d transfer function
-    % Find corresponding 1d transfer function
-    tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
-    % Low pass at 20 kHz
-	tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
-    tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
-    if tokens{1} == 'm'
-        y = synthesize_from_tf(Ug.male, tf_blend);
-    elseif tokens{1} == 'f'
-        y = synthesize_from_tf(Ug.female, tf_blend);
-    end
-    name = [item_name, '_1d', '.wav'];
-    filename = fullfile(outpath, name);
-    writewav(filename, normalizeLoudness(y, Fs_mm), Fs_out);
-    playlist{end+1} = name;    
     
     fprintf("done.\n");
 end
