@@ -3,7 +3,7 @@
 clc; close all; clearvars;
 addpath('../include')
 addpath('../include/bandwidth_extension')
-addpath('../include/sap-voicebox/voicebox')
+addpath('../include/LfGlottalFlow')
 addpath('../include/VocalTractLabApi')
 
 load('filters.mat');

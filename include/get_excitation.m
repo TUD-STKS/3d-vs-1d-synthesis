@@ -24,7 +24,7 @@ lf_params = get_LF_params(voice_quality);
 
 while idx <= length(f)
     % Get one period of glottal flow
-    U0 = glottal_flow_lf(f(idx), Fs, oversampling, 1/f(idx), lf_params);
+    U0 = glottal_flow_lf(f(idx), Fs, oversampling, lf_params);
     Ug = [Ug; U0];
     idx = length(Ug)+1;
 end
