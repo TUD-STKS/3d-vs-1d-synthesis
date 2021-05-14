@@ -47,7 +47,7 @@ Fs_out = Fs_mm;
 Finf = 4000;
 
 %% Excitation
-voice_qualities = {'modal', 'breathy', 'harsh'};
+voice_qualities = {'modal', 'breathy', 'pressed'};
 n_vq = length(voice_qualities);
 
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];

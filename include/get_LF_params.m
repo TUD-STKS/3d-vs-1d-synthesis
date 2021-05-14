@@ -16,7 +16,7 @@ switch voice_quality
         te = 0.7575;
         ta = 0.0819;
         tc = 0.9508;
-    case 'harsh'
+    case 'pressed'
         tp = 0.2439;
         te = 0.3204;
         ta = 0.0109;
