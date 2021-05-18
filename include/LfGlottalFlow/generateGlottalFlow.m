@@ -8,6 +8,7 @@ AMP = params.AMP;
 OQ = params.OQ;
 SQ = params.SQ;
 TL = params.TL;
+SNR = params.SNR;
 
 T0 = 1.0;        
 te = OQ;
@@ -35,6 +36,14 @@ for i=1:N
     end
 end
 
-glottalFlow = x;
+
+%% Add the noise
+% In accordance with the implementation in VTL, the noise source is:
+% Gaussian, mean 0.0, 1.0 / 12.0
+noise = random('Normal', 0.0, 1.0 / sqrt(12.0), size(x));
+shapedNoise = x/AMP .* noise;
+% Apply a gentle low-pass filter to the shaped noise
+shapedNoise = filtfilt([1, 0.95], 1, shapedNoise);
+glottalFlow = x + 10^(-SNR/20) * AMP * shapedNoise;
 
 end
