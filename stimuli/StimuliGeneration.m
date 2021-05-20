@@ -57,9 +57,9 @@ contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
 Ug.male = [];
 Ug.female = [];
 for vq = 1 : n_vq
-    [ug, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq});
+    [ug, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq}, 'male');
     Ug.male = [Ug.male, ug];
-    [ug, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq});
+    [ug, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq},'female');
     Ug.female = [Ug.female, ug];
 end
 % figure(1);
