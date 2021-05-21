@@ -1,6 +1,7 @@
 %% Generation of the stimuli for the listening experiments
 
 clc; close all; clearvars;
+%%
 addpath('../include')
 addpath('../include/bandwidth_extension')
 addpath('../include/LfGlottalFlow')
@@ -71,14 +72,14 @@ end
 %% Synthesize
 playlist = {};
 for file = tf_mm_files'
-    fprintf("Processing %s...", file.name);
+    fprintf("Processing %s: ", file.name);
     [tf_mm, f_Hz] = read_tf(file);
     % Low pass at 20 kHz
 	tf_mm = tf_mm .* freqz(H_AA, length(tf_mm), 'whole');
     tokens = split(file.name, '_');
     
     for vq = 1:n_vq
-        fprintf(" %s ", voice_qualities{vq});
+        fprintf("%s, ", voice_qualities{vq});
         %% Generate baseline (multimodal, full bandwidth)
 
         if tokens{1} == 'm'

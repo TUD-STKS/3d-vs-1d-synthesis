@@ -21,16 +21,19 @@ if strcmp(gender,'female')
         lf_params.OQ = 0.84;
         lf_params.SQ = 1.9;
         lf_params.TL = 0.04;
+        lf_params.SNR = 60.0;
     case 'breathy'
         lf_params.AMP = 300;
         lf_params.OQ = 0.94;
         lf_params.SQ = 1.38;
         lf_params.TL = 0.08;
+        lf_params.SNR = 20.0;
     case 'pressed'
         lf_params.AMP = 300;
         lf_params.OQ = 0.78;
         lf_params.SQ = 1.99;
         lf_params.TL = 0.01;
+        lf_params.SNR = 40.0;
     end
 elseif strcmp(gender, 'male')
     
@@ -40,15 +43,18 @@ elseif strcmp(gender, 'male')
         lf_params.OQ = 0.84;
         lf_params.SQ = 2.15;
         lf_params.TL = 0.04;
+        lf_params.SNR = 60.0;
     case 'breathy'
         lf_params.AMP = 300;
         lf_params.OQ = 0.96;
         lf_params.SQ = 1.15;
         lf_params.TL = 0.08;
+        lf_params.SNR = 20.0;
     case 'pressed'
         lf_params.AMP = 300;
         lf_params.OQ = 0.70;
         lf_params.SQ = 2.18;
         lf_params.TL = 0.01;
+        lf_params.SNR = 40.0;
     end
 end
