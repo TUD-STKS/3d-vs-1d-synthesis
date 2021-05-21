@@ -1,4 +1,4 @@
-function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling, params)
+function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling, params, gender)
 %GET_EXCITATION This function returns a glottal flow signal with a
 %specified f0 contour, voice quality, padded silence, and fade-in and out.
 %   Fs: Sampling rate
@@ -11,6 +11,11 @@ function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling, par
 
 if nargin < 7
     params = 'modal';
+    gender = 'male';
+end
+
+if nargin < 8
+   gender = 'male';
 end
 
 % Get an f0 contour
@@ -21,7 +26,7 @@ Ug = [];
 idx = 1;
 
 if ischar(params)
-    lf_params = get_LF_params(params);
+    lf_params = get_LF_params(params, gender);
 else
     lf_params = params;
 end
