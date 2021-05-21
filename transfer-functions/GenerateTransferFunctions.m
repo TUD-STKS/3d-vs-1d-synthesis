@@ -5,11 +5,11 @@ addpath('../include/VocalTractLabApi');
 
 %% List of shapes (as they appear in the speaker file)
 shapes = [
-    "a_no-pf_mm-formants",
-    "e_no-pf_mm-formants",
-    "i_no-pf_mm-formants",
-    "o_no-pf_mm-formants",
-    "u_no-pf_mm-formants"
+    "a_no-pf",
+    "e_no-pf",
+    "i_no-pf",
+    "o_no-pf",
+    "u_no-pf"
     ];
 
 outdir = "1d";

@@ -1,0 +1,14 @@
+Making of the stimuli
+- Offset of the phase of the transfer functions of 1.5 is suspicious -> Does not seem to occur when using the VTL GUI export.
+- Offset is present in both 1d and MM transfer functions
+- 1d transfer function phase has about twice the slope of the phase of the MM TF
+
+Simon:
+- Find out why the phase of the transfer functions exported from VTL have an offset of 1.5
+
+Remi:
+- Look into two more papers suggested by Peter to find parameters for the three phonation types 
+- Find out why the phase of the transfer functions of the multimodal method have an offset of 1.5 and an insufficient slope
+
+Next meeting:
+Juni 1st, 8 am

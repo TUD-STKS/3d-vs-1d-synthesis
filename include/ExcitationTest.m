@@ -1,8 +1,9 @@
 %% Try out different parameters for the LF model
 clc; clearvars;
-
+addpath('../include/LfGlottalFlow/');
 %% Transfer function for testing
 tf_male = read_tf('../transfer-functions/multimodal/m_a_MM.txt');
+[tf_male, f_Hz]  = read_tf('../transfer-functions/1d/m_a_1d.txt');
 tf_female = read_tf('../transfer-functions/multimodal/f_a_MM.txt');
 
 %%
@@ -20,15 +21,15 @@ sil_s = 0.250;
 % Fundamental frequency
 f0.male = 100;
 f0.female = 200;
-contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
-contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
+contour.male = [[0, 0.55*dur_s, dur_s]', [0.85, 1.0, 0.75]'*f0.male];
+contour.female = [[0, 0.55*dur_s, dur_s]', [0.85, 1.0, 0.75]'*f0.female];
 
 %% LF parameters
 lf_params.AMP = 300;
-lf_params.OQ = 0.7;
-lf_params.SQ = 3.0;
-lf_params.TL = 0.1;
-lf_params.SNR = 40.0;
+lf_params.OQ = 0.5;
+lf_params.SQ = 3.00;
+lf_params.TL = 0.09;
+lf_params.SNR = 24.5;
 
 %% Generate excitation signal
 [ug_male, t_male] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling, lf_params);
