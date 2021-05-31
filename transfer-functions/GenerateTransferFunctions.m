@@ -24,8 +24,8 @@ elseif sex == "f"
 end
     
 opts = vtl.default_transfer_function_options();
-opts.type = 'SPECTRUM_PU';
-opts.radiation = 'PISTONINWALL_RADIATION';
+opts.spectrumType = 'SPECTRUM_PU';
+opts.radiationType = 'PISTONINWALL_RADIATION';
 opts.paranasalSinuses = false;
 opts.piriformFossa = false;
 opts.staticPressureDrops = false;

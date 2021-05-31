@@ -3,9 +3,9 @@ clearvars;
 %% Get transfer function
 addpath('..')
 vtl = VTL('../../speaker-files/female.speaker');
-opts = vtl.opts();
-opts.type = 'SPECTRUM_PU';
-opts.radiation = 'PISTONINWALL_RADIATION';
+opts = vtl.default_transfer_function_options();
+opts.spectrumType = 'SPECTRUM_PU';
+opts.radiationType = 'PISTONINWALL_RADIATION';
 opts.paranasalSinuses = false;
 opts.piriformFossa = false;
 opts.staticPressureDrops = false;

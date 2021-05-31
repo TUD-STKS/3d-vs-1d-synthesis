@@ -171,6 +171,67 @@ C_EXPORT int vtlTractToTube(double* tractParams,
 
 
 // ****************************************************************************
+// Enumerates the different options to model radiation of the sound wave
+// from the mouth
+// ****************************************************************************
+
+typedef enum
+{
+    NO_RADIATION,
+    PISTONINSPHERE_RADIATION,
+    PISTONINWALL_RADIATION,
+    PARALLEL_RADIATION,
+    NUM_RADIATION_OPTIONS
+} RadiationType;
+
+
+// ****************************************************************************
+// Enumerates the different types of spectra (or transfer functions)
+// ****************************************************************************
+
+typedef enum
+{
+    SPECTRUM_UU,  // Output flow over input flow
+    SPECTRUM_PU   // Output output pressure over input flow
+} SpectrumType;
+
+
+// ****************************************************************************
+// A struct containing the various options available for the calculation 
+// of the vocal tract transfer function
+// ****************************************************************************
+
+typedef struct
+{
+    SpectrumType spectrumType;      // What kind of transfer function to calculate
+    RadiationType radiationType;        // Radiation model
+    bool boundaryLayer;             // Consider boundary layer resistance
+    bool heatConduction;            // Consider heat conduction losses
+    bool softWalls;                 // Consider soft walls
+    bool hagenResistance;           // Consider Hagen-Poiseuille resistance
+    bool innerLengthCorrections;    // Make inner (tube) length corrections
+    bool lumpedElements;            // Use lumped elements in T-sections
+    bool paranasalSinuses;          // Include the paranasal sinuses
+    bool piriformFossa;             // Include the piriform fossa
+    bool staticPressureDrops;       // Consider static pressure drops
+} TransferFunctionOptions;
+
+
+// ****************************************************************************
+// Returns the default options for the transfer function calculation. 
+// 
+// Parameters out:
+// o opts: A struct containing the default values for the options available for
+// the transfer function calculation.
+//
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// ****************************************************************************
+C_EXPORT int vtlGetDefaultTransferFunctionOptions(TransferFunctionOptions* opts);
+
+
+// ****************************************************************************
 // Calculates the volume velocity transfer function of the vocal tract between 
 // the glottis and the lips for the given vector of vocal tract parameters and
 // returns the spectrum in terms of magnitude and phase.
@@ -188,8 +249,9 @@ C_EXPORT int vtlTractToTube(double* tractParams,
 //     at the frequencies 0.0, 86.13, 172.3, ... Hz.
 //     The value of numSpectrumSamples should not be greater than 16384,
 //     otherwise the returned spectrum will be bandlimited to below 10 kHz.
-// o Type of the transfer function to return:
-//     INPUT_IMPEDANCE, OUTPUT_IMPEDANCE, FLOW_SOURCE_TF (default), PRESSURE_SOURCE_TF, RADIATION
+// o opts: The options to use for the transfer function calculation. If NULL 
+//     is passed, the default options will be used (see 
+//     vtlGetDefaultTransferFunctionOptions()).
 // 
 // Parameters out:
 // o magnitude: Vector of spectral magnitudes at equally spaced discrete 
@@ -203,41 +265,26 @@ C_EXPORT int vtlTractToTube(double* tractParams,
 // 1: The API has not been initialized.
 // ****************************************************************************
 
-typedef enum 
-{
-    NO_RADIATION,
-    PISTONINSPHERE_RADIATION,
-    PISTONINWALL_RADIATION,
-    PARALLEL_RADIATION,
-    NUM_RADIATION_OPTIONS
-} RadiationType;
-
-typedef enum 
-{
-    SPECTRUM_UU,
-    SPECTRUM_PU
-} SpectrumType;
-
-typedef struct 
-{
-    SpectrumType type;
-    RadiationType radiation;
-    bool boundaryLayer;
-    bool heatConduction;
-    bool softWalls;
-    bool hagenResistance;
-    bool innerLengthCorrections;
-    bool lumpedElements;
-    bool paranasalSinuses;
-    bool piriformFossa;
-    bool staticPressureDrops;
-} TransferFunctionOptions;
-
-C_EXPORT int vtlGetDefaultTransferFunctionOptions(TransferFunctionOptions* opts);
+C_EXPORT int vtlGetTransferFunction(double* tractParams, int numSpectrumSamples,
+    TransferFunctionOptions* opts, double* magnitude, double* phase_rad);
 
 
-C_EXPORT int vtlGetTransferFunction(double *tractParams, int numSpectrumSamples,
-    TransferFunctionOptions opts, double *magnitude, double *phase_rad);
+// ****************************************************************************
+// Calculates the real limited tract params (the ones that are actually used
+// in the synthesis) from a given arbitrary set of tract parameters
+//
+// Parameters:
+// o inTractParams (in): Is a vector of vocal tract parameters with 
+//     numVocalTractParams elements.
+// o outTractParams (out): Is a vector of vocal tract parameters with 
+//     numVocalTractParams elements.
+//
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// ****************************************************************************
+
+C_EXPORT int vtlInputTractToLimitedTract(double* inTractParams, double* outTractParams);
 
 
 // ****************************************************************************
@@ -416,6 +463,28 @@ C_EXPORT int vtlGesturalScoreToAudio(const char* gesFileName, const char* wavFil
 
 C_EXPORT int vtlGesturalScoreToTractSequence(const char* gesFileName, 
   const char* tractSequenceFileName);
+
+
+// ****************************************************************************
+// This function gets the duration from a gestural score.
+// Parameters:
+// o gesFileName (in): Name of the gestural score file.
+// o audioFileDuration (out): The number of audio samples, the audio file would
+//   have, if the gestural score was synthesized. This number can be slightly 
+//   larger than the length of the gestural score because the audio is 
+//   synthesized in chunks of a constant size. If not wanted, set to NULL.
+// o gesFileDuration (out): The duration of the gestural score (in samples).
+//   If not wanted, set to NULL.
+//
+// Function return value:
+// 0: success.
+// 1: The API was not initialized.
+// 2: Loading the gestural score file failed.
+// 3: Values in the gestural score file are out of range.
+// ****************************************************************************
+
+C_EXPORT int vtlGetGesturalScoreDuration(const char* gesFileName, int* numAudioSamples,
+    int* numGestureSamples);
 
 
 // ****************************************************************************
