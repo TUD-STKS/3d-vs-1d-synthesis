@@ -16,7 +16,11 @@ classdef VTL < handle
             %VTL Construct an instance of the VTL API
             %   Detailed explanation goes here
             vtl.speakerFileName = speakerFileName;
-            vtl.libName = "VocalTractLabApi";
+            if ispc
+                vtl.libName = "VocalTractLabApi";
+            elseif isunix
+                vtl.libName = "libVocalTractLabApi";
+            end
             vtl.state_samples = 110; % Processing rate in VTL (samples), currently 1 vocal tract state evaluation per 110 audio samples
             vtl.samplerate_audio = 44100; % Global audio sampling rate (44100 Hz default)
             vtl.samplerate_internal = vtl.samplerate_audio / vtl.state_samples; % Internal tract samplerate (ca. 400.9090... default)
