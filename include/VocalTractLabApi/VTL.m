@@ -37,7 +37,11 @@ classdef VTL < handle
         function initialize(obj)
             %INITIALIZE Initializes the VocalTractLab API library
             if ~libisloaded(obj.libName)
-                loadlibrary(obj.libName, obj.libName + ".h");
+                if ispc
+                    loadlibrary(obj.libName, obj.libName + ".h");
+                elseif isunix
+                    loadlibrary(obj.libName, extractAfter(obj.libName, "lib") + ".h");
+                end
                disp(['Loaded library: ' obj.libName]);
             end
             
