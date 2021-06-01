@@ -1,0 +1,14 @@
+Transfer function generation:
+Radiation from the mouth now calculated the same way for 1d and 3d transfer functions
+Distance from the mouth now the same
+To do: Create new stimuli
+
+Excitation generation:
+New parameters for LF model found in paper by Alku
+Spectral slope not uniquely defined by the parameters from Alku 
+-> Make educated guess about spectral slope and pick three sufficiently different values
+Addition of noise to glottal flow implemented
+-> Make educated about SNR
+-> Low-pass filter noise part: Hillman - Characteristics of the glottal turbulent noise source
+
+Next meeting: June 22, 8 am
