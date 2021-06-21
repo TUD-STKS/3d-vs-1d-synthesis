@@ -48,9 +48,10 @@ Fs_out = Fs_mm;
 Finf = 4000;
 
 %% Excitation
-%voice_qualities = {'modal', 'breathy', 'pressed'};
-voice_qualities = {'modal'};
+voice_qualities = {'modal', 'breathy', 'pressed'};
+% voice_qualities = {'modal'};
 n_vq = length(voice_qualities);
+dc = [0.0 0.0 0.0];
 
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
 contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
@@ -59,9 +60,9 @@ contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
 Ug.male = [];
 Ug.female = [];
 for vq = 1 : n_vq
-    [ug, tmale] = get_excitation(contour.male, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq}, 'male');
+    [ug, tmale] = get_excitation(contour.male, dc(vq), Fs_out, sil_s, fade, oversampling, voice_qualities{vq}, 'male');
     Ug.male = [Ug.male, ug];
-    [ug, tfemale] = get_excitation(contour.female, 0.0, Fs_out, sil_s, fade, oversampling, voice_qualities{vq},'female');
+    [ug, tfemale] = get_excitation(contour.female, dc(vq), Fs_out, sil_s, fade, oversampling, voice_qualities{vq},'female');
     Ug.female = [Ug.female, ug];
 end
 % figure(1);
