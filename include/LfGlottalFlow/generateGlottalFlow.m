@@ -1,5 +1,5 @@
 %% Generate a glottal flow signal
-function glottalFlow = generateGlottalFlow(length, params)
+function glottalFlow = generateGlottalFlow(length, params, Fs)
 MIN_TA = 0.01;  
 N = length;
 x = zeros(length,1);
@@ -49,7 +49,8 @@ for i = 1:numel(x)
     end
 end
 % Apply a gentle low-pass filter to the shaped noise
-noise = filtfilt([1, 0.95], 1, noise);
+Hd = designNoiseFilter(Fs);
+noise_filt = Hd(noise);
 glottalFlow = x .* (1 + 10^(-SNR/20) * noise);
 
 end

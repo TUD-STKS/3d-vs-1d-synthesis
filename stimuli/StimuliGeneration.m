@@ -48,7 +48,8 @@ Fs_out = Fs_mm;
 Finf = 4000;
 
 %% Excitation
-voice_qualities = {'modal', 'breathy', 'pressed'};
+%voice_qualities = {'modal', 'breathy', 'pressed'};
+voice_qualities = {'modal'};
 n_vq = length(voice_qualities);
 
 contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
@@ -117,6 +118,9 @@ for file = tf_mm_files'
         tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
         % Low pass at 20 kHz
         tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
+        % 1D transfer functions have much higher level overall, scale down
+        % before blending
+        tf_1d = tf_1d ./ 20;
         tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
         if tokens{1} == 'm'
             y = synthesize_from_tf(Ug.male(:,vq), tf_blend);

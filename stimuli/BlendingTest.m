@@ -13,7 +13,7 @@ Fs_Hz = 44100;
 [f_mm, f3_Hz] = read_tf('../transfer-functions/multimodal/f_a_MM.txt');
 [m_mm, f4_Hz] = read_tf('../transfer-functions/multimodal/m_a_MM.txt');
 
-%% Low-pass filter both transfer functions at 20 kHz to avaoid aliasing
+%% Low-pass filter both transfer functions at 20 kHz to avoid aliasing
 f_1d = f_1d .* freqz(H_AA, length(f_1d), 'whole');
 m_1d = m_1d .* freqz(H_AA, length(m_1d), 'whole');
 f_mm = f_mm .* freqz(H_AA, length(f_mm), 'whole');
@@ -22,9 +22,9 @@ m_mm = m_mm .* freqz(H_AA, length(m_mm), 'whole');
 
 %% Blending
 figure(1);
-blend_tf(f_mm, f_1d, f_inf, Fs_Hz)
+blend_tf(f_mm, f_1d ./ 20, f_inf, Fs_Hz)
 title('female /a/');
 
 figure(2);
-blend_tf(m_mm, m_1d, f_inf, Fs_Hz)
+blend_tf(m_mm, m_1d ./ 20, f_inf, Fs_Hz)
 title('male /a/');

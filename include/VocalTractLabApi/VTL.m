@@ -14,7 +14,6 @@ classdef VTL < handle
     methods
         function vtl = VTL(speakerFileName)
             %VTL Construct an instance of the VTL API
-            %   Detailed explanation goes here
             vtl.speakerFileName = speakerFileName;
             if ispc
                 vtl.libName = "VocalTractLabApi";
@@ -25,7 +24,7 @@ classdef VTL < handle
             vtl.samplerate_audio = 44100; % Global audio sampling rate (44100 Hz default)
             vtl.samplerate_internal = vtl.samplerate_audio / vtl.state_samples; % Internal tract samplerate (ca. 400.9090... default)
             vtl.state_duration = 1 / vtl.samplerate_internal; % Processing rate in VTL (time), currently 2.49433... ms
-            vtl.verbose = true;
+            vtl.verbose = true; % If true, additional information is printed by some functions
             vtl.initialize();
         end
         
@@ -49,7 +48,7 @@ classdef VTL < handle
                 error(['Failed to load external library: ' obj.libName]);
             end
                
-            failure = calllib(obj.libName, 'vtlInitialize', obj.speakerFileName);
+            failure = calllib(obj.libName, 'vtlInitialize', char(obj.speakerFileName));
             if (failure ~= 0)
                 disp('Error in vtlInitialize()!');   
                 return;
@@ -66,8 +65,11 @@ classdef VTL < handle
             unloadlibrary(obj.libName);
             disp(obj.libName + " unloaded.")
         end
-        
+                
         function version = get_version(obj)
+            %GET_VERSION Retrieves the version of the API in terms of the
+            % compile date
+            
             % Init the variable version with enough characters for the version string
             % to fit in.
             version = '                                ';
@@ -78,6 +80,8 @@ classdef VTL < handle
         end        
         
         function c = get_constants(obj)
+            %GET_CONSTANTS Returns the used constants
+            
             c = struct();
             c.audioSamplingRate = 0;
             c.n_tube_sections = 0;
@@ -91,7 +95,29 @@ classdef VTL < handle
             end
         end
         
+        function automatic_calculation_of_TRX_and_TRY(obj, varargin)
+            %AUTOMATIC_CALCULATION_OF_TRX_AND_TRY Turns the automatic 
+            % calculation of the tongue root parameters TRX and TRY on or
+            % off.
+            
+            p = inputParser;
+            addOptional(p, 'automatic_calculation', true);
+            parse(p, varargin{:});
+            [failure] = calllib(obj.libName, 'vtlCalcTongueRootAutomatically', ...
+                p.Results.automatic_calculation);
+            if failure
+                error('Error in vtlCalcTongueRootAutomatically()!');
+            end
+            
+        end
+        
         function p_info = get_param_info(obj, params)
+            % GET_PARAM_INFO Returns information on the parameters of the
+            % vocal tract or the glottis model, depending on the params.
+            % 
+            % params: Either the string "tract" or "glottis". Controls
+            % which parameters to return.
+            
             if ~any(params == ["tract", "glottis"])
                 disp("Unknown key in 'get_param_info'. Key must be 'tract' or 'glottis'. Returning 'tract' info now.");
                 params = "tract";
@@ -125,6 +151,12 @@ classdef VTL < handle
         end
         
         function param = get_tract_params_from_shape(obj, shape)
+            % GET_TRACT_PARAMS_FROM_SHAPE Returns the vocal tract
+            % parameters of the shape identified by SHAPE
+            %
+            % shape: String identifying the vocal tract shape contained in
+            % the loaded speaker file.
+            
             c = obj.get_constants();
             param = zeros(1, c.n_tract_params);
 
@@ -158,6 +190,14 @@ classdef VTL < handle
         end
         
         function tube_data = tract_params_to_tube_data(obj, tract_params)
+            % TRACT_PARAMS_TO_TUBE_DATA Returns the tube sequence
+            % corresponding to a given set of vocal tract parameters.
+            %
+            % tract_params: A sequence of vocal tract parameters, one row
+            % per state.
+            %
+            % tube_data: Sequence of tube sequence data, one row per state.
+            
             constants = obj.get_constants();
             if size(tract_params, 2) ~= constants.n_tract_params
                 error("Number of columns does not match number of vocal tract parameters!")
@@ -192,23 +232,20 @@ classdef VTL < handle
         end
         
         function load_speaker_file(obj, speakerFileName)
+            % LOAD_SPEAKER_FILE Loads a speaker file.
+            %
+            % speakerFileName: Path to the speaker file.
+            
             obj.close();
             obj.speakerFileName = speakerFileName;
             obj.initialize();
         end
-              
-        function parameters = shape(obj, shapeName)
-            parameters = zeros(1, obj.numVocalTractParams);
-
-            [failure, ~, parameters] = ...
-            calllib(obj.libName, 'vtlGetTractParams', shapeName, parameters);
-
-            if(failure)
-                error('Could not retrieve the shape parameters!')
-            end
-        end
-               
+                             
         function opts = default_transfer_function_options(obj)
+            % DEFAULT_TRANSFER_FUNCTION_OPTIONS Returns the default values
+            % of the paramters for the calculation of the transfer function
+            % of a vocal tract shape.
+            
             opts = struct('spectrumType', 0, 'radiationType', 0, 'boundaryLayer', false, ...
                     'heatConduction', false, 'softWalls', false, 'hagenResistance', false, ...
                     'innerLengthCorrections', false, 'lumpedElements', false, 'paranasalSinuses', false, ...
@@ -219,6 +256,19 @@ classdef VTL < handle
         end
         
         function [tf, f] = get_transfer_function(obj, tract_params, n_spectrum_samples, opts)
+            % GET_TRANSFER_FUNCTION Returns the transfer function of a
+            % vocal tract shape
+            %
+            % TRACT_PARAMS: The vocal tract parameters of the shape of
+            % interest.
+            % N_SPECTRUM_SAMPLES: Number of desired samples of the transfer
+            % function
+            % OPTS: Options for the calculation (see
+            % DEFAULT_TRANSFER_FUNCTION_OPTIONS())
+            %
+            % TF: Complex transfer function of the vocal tract shape
+            % F: Vector of sampled frequency values
+            
             mag = zeros(1, n_spectrum_samples);
             phase = zeros(1, n_spectrum_samples);
             [failed, ~, opts, mag, phase] = ...
@@ -235,6 +285,8 @@ classdef VTL < handle
         end
         
         function synthesis_reset(obj)
+            % SYNTHESIS_RESET Resets the synthesis. 
+            
             failure = calllib(obj.libName, 'vtlSynthesisReset');
             if failure ~= 0
                 error('Something went wrong in vtlSynthesisReset!');
@@ -319,22 +371,132 @@ classdef VTL < handle
             end
         end
         
-        function audio = gesturalScoreToAudio(obj, ges_file_path, varargin)
+        function duration = get_gestural_score_audio_duration(obj, ges_file_path, return_samples)
+            gesFileName = ges_file_path;
+            numAudioSamples = 0;
+            numGestureSamples = 0;
+            [failure, gesFileName, numAudioSamples, numGestureSamples] = ...
+                calllib(obj.libName, 'vtlGetGesturalScoreDuration', ...
+                gesFileName, numAudioSamples, numGestureSamples);
+            if failure ~= 0
+                error('Something went wrong in vtlGetGesturalScoreDuration!');
+            end
+            if return_samples  % Return the number of samples in audio file
+                duration = numAudioSamples;
+            else  % Return the duration in seconds
+                duration = numAudioSamples / obj.samplerate_audio;
+            end            
+        end
+        
+        function varargout = gestural_score_to_audio(obj, ges_file_path, varargin)
+            p = inputParser;
             addOptional(p, 'audio_file_path', '');
             addOptional(p, 'return_audio', true);
             addOptional(p, 'return_n_samples', false);
             parse(p, varargin{:});
-            if audio_file_path == '' && return_audio == false
+            if strcmp(p.Results.audio_file_path, '') && p.Results.return_audio == false
                 warning('Function returns nothing. Either pass an output audio file path or set return_audio to true!');
             end
-            wavFileName = audio_file_path;
+            wavFileName = p.Results.audio_file_path;
             gesFileName = ges_file_path;
-            if return_audio
-                audio = zeros(1, 22); % Figure out the expected size of the returned audio
+            if p.Results.return_audio
+                audio = zeros(1, obj.get_gestural_score_audio_duration(ges_file_path, true));
             else
+                audio = libpointer(double);  % NULL pointer
             end
+            if obj.verbose
+                enableConsoleOutput = 1;
+            else
+                enableConsoleOutput = 0;
+            end            
+            numSamples = 0;
+            [failure, gesFileName, wavFileName, audio, numSamples] = ...
+                calllib(obj.libName, 'vtlGesturalScoreToAudio', ...
+                gesFileName, wavFileName, audio, numSamples, ...
+                enableConsoleOutput);
+            if failure ~= 0
+                error('Something went wrong in vtlGesturalScoreToAudio!');
+            end
+            if p.Results.return_audio
+                varargout{1} = audio;
+            end
+        end
+        
+        function varargout = gestural_score_to_tract_sequence(obj, ges_file_path, varargin)
+            p = inputParser;
+            addOptional(p, 'tract_file_path', '');
+            addOptional(p, 'return_Sequence', false);
+            parse(p, varargin{:});
+            gesFileName = ges_file_path;
+            if strcmp(p.Results.tract_file_path, '')
+                [path, name, ~] = fileparts(gesFileName);
+                tract_file_path = fullfile(path, strcat(name, '_tractSeq.txt'));
+            else
+                tract_file_path = p.Results.tract_file_path;
+            end
+            tractSequenceFileName = tract_file_path;
             
-            error('TODO: Function not implemented yet!');
+            [failure, gesFileName, tractSequenceFileName] = calllib(obj.libName, ...
+                'vtlGesturalScoreToTractSequence', gesFileName, tractSequenceFileName);
+            if failure
+                error('Error in vtlGesturalScoreToTractSequence()!');
+            end
+            if obj.verbose
+                fprintf('Created TractSeq of file: %s\n', gesFileName);
+            end
+            if p.Results.return_Sequence && nargout > 1
+                varargout = cell(1,nargout);
+                [varargout{1}, varargout{2}] = obj.tract_seq_to_table(tractSequenceFileName);
+            end
+        end
+        
+        function varargout = tract_sequence_to_audio(obj, tract_seq_path, varargin)
+            p = inputParser;
+            addOptional(p, 'audio_file_path', '');
+            addOptional(p, 'return_audio', true);
+            addOptional(p, 'return_n_samples', false);
+            parse(p, varargin{:});
+            if strcmp(p.Results.audio_file_path, '') && ~p.Results.return_audio
+                fprintf('Warning! Function cannot return anything!');
+            end
+            wavFileName = p.Results.audio_file_path;
+            tractSequenceFileName = tract_seq_path;
+            if p.Results.return_audio
+                audio = zeros(1, obj.get_tract_seq_len(tract_seq_path) * ...
+                    ceil(obj.state_duration * obj.samplerate_audio));
+            else
+                audio = libpointer(double);  % NULL pointer
+            end
+            numSamples = 0;
+            [failure, tractSequenceFileName, wavFileName, audio, numSamples] ...
+                = calllib(obj.libName, 'vtlTractSequenceToAudio', ...
+                tractSequenceFileName, wavFileName, audio, numSamples);
+            if obj.verbose
+                fprintf('Audio generated: %s\n', tract_seq_path);
+            end
+            if p.Results.return_audio
+                varargout{1} = audio;
+            end            
+        end
+        
+        function tract_seq_len = get_tract_seq_len(~, tract_seq_path)
+            fid = fopen(tract_seq_path);
+            for i = 1:8
+                line = fgetl(fid);
+            end
+            tract_seq_len = str2num(line);            
+        end
+        
+        function limited_tract_state = tract_state_to_limited_tract_state(obj, tract_params)
+            constants = obj.get_constants();
+            limited_tract_state = [];
+            for k = 1:size(tract_params, 1)
+                inTractParams = tract_params(k, :);
+                outTractParams = zeros(1, constants.n_tract_params);
+                [outTractParams] = calllib(obj.libName, 'vtlInputTractToLimitedTract', ... 
+                    intractParams, outTractParams);
+                limited_tract_state = [tract_param_data; outTractParams];
+            end
         end
         
         function save_transfer_function(~, fileName, tf, f)
@@ -348,6 +510,15 @@ classdef VTL < handle
                 fprintf(fileID, '%f  %f  %f\n', f(i), abs(tf(i)), angle(tf(i)));
             end            
             fclose(fileID);
+        end
+        
+        function [TG, TVT] = tract_seq_to_table(~, tract_file_path)
+            opts = detectImportOptions(tract_file_path, 'NumHeaderLines', 8);
+            T = readtable(tract_file_path, opts);
+            TG = T(1:2:end, :);
+            TVT = T(2:2:end, :);
+            TG = rmmissing(TG, 2);
+            TVT = rmmissing(TVT, 2);
         end
     end
 end

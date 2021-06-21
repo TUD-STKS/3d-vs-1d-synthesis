@@ -20,7 +20,7 @@ if strcmp(gender,'female')
         lf_params.AMP = 300;
         lf_params.OQ = 0.84;
         lf_params.SQ = 1.9;
-        lf_params.TL = 0.04;
+        lf_params.TL = 0.02;
         lf_params.SNR = 60.0;
     case 'breathy'
         lf_params.AMP = 300;
@@ -42,8 +42,8 @@ elseif strcmp(gender, 'male')
         lf_params.AMP = 300;
         lf_params.OQ = 0.84;
         lf_params.SQ = 2.15;
-        lf_params.TL = 0.04;
-        lf_params.SNR = 50.0;
+        lf_params.TL = 0.02;
+        lf_params.SNR = 60.0;
     case 'breathy'
         lf_params.AMP = 300;
         lf_params.OQ = 0.96;

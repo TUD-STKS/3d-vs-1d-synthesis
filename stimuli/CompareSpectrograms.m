@@ -4,7 +4,7 @@ addpath('../include')
 %% 
 stimuli_files = dir('dev/*.wav');
 
-phonation_type = "breathy";
+phonation_type = "modal";
 
 for file = stimuli_files'
     fprintf("Processing %s...", file.name);
@@ -35,7 +35,7 @@ for file = stimuli_files'
     else
         ylabel("Frequency [kHz]");
     end
-    title("/" + tokens{2} + "/, MM low, " + tokens{end}(1:end-4) + " high");
+    title("/" + tokens{2} + "/, MM low, " + tokens{end-1} + " high");
     fprintf("done.\n");
 end
 figure(1)
