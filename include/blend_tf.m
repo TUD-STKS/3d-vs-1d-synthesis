@@ -1,4 +1,4 @@
-function [varargout] = blend_tf(tf_low, tf_high, f_inf, fs)
+function [varargout] = blend_tf(tf_low, tf_high, f_inf, fs, varargin)
 %BLEND_TF Blends two transfer functions
 % The blended transfer function uses the low frequency components of one
 % transfer function and the high frequency components of another transfer
@@ -11,7 +11,8 @@ function [varargout] = blend_tf(tf_low, tf_high, f_inf, fs)
 %
 % Returns the blended transfer function if output argument is given.
 % Otherwise plots the consituent and blended transfer functions and the
-% filter functions.
+% filter functions. If the string 'dB' or 'db' is supplied as a varargin,
+% the plot is on a semi-log scale.
 
 % Design a crossover filter with maximum slope to do the blending
 blendFilter = crossoverFilter(1, f_inf, 48, fs);
@@ -30,17 +31,32 @@ f_Hz = linspace(0, fs, length(tf_low));
 if nargout > 0
     varargout{1} = blended_tf;
 else
-    hold on;
-    plot(f_Hz(1:length(blended_tf)/2), abs(blended_tf(1:length(blended_tf)/2)), 'b-');
+    blended_tf = abs(blended_tf);
     tf_low = padarray(abs(tf_low), length(tf_low) - length(f_Hz), 0, 'post');
     tf_high = padarray(abs(tf_high), length(tf_low) - length(f_Hz), 0, 'post');
-    plot(f_Hz(1:length(blended_tf)/2), tf_low(1:length(blended_tf)/2), '--');
-    plot(f_Hz(1:length(blended_tf)/2), tf_high(1:length(blended_tf)/2), ':');    
-    yyaxis right;
     % Get the SOS filter coefficients for the crossover filters
     [b_lp, a_lp, b_hp, a_hp] = getFilterCoefficients(blendFilter, 1);
     H_lp = abs(freqz([b_lp, a_lp], length(blended_tf), 'whole'));
     H_hp = abs(freqz([b_hp, a_hp], length(blended_tf), 'whole'));
+    
+    if nargin == 5
+        if strcmp(varargin{1}, 'dB') || strcmp(varargin{1}, 'db')
+            blended_tf = db(blended_tf);
+            tf_low = db(tf_low);
+            tf_high = db(tf_high);
+            H_lp = db(H_lp);
+            H_hp = db(H_hp);
+        else
+            error('Unknown varargin argument passed!')
+        end        
+    end
+    
+    hold on;
+    plot(f_Hz(1:length(blended_tf)/2), blended_tf(1:length(blended_tf)/2), 'b-');
+    plot(f_Hz(1:length(blended_tf)/2), tf_low(1:length(blended_tf)/2), '--');
+    plot(f_Hz(1:length(blended_tf)/2), tf_high(1:length(blended_tf)/2), ':');    
+    yyaxis right;
+
     plot(f_Hz(1:length(blended_tf)/2), H_lp(1:length(blended_tf)/2), ':');
     plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2)), ':';
     plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2) + H_lp(1:length(blended_tf)/2), ':');
