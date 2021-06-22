@@ -30,7 +30,10 @@ fade = 0.05;
 % Sound duration
 global dur_s;
 dur_s = 0.5;
+% Output cutoff frequency
+fc_out = 12e3;
 
+% Fundamental frequencies
 f0.male = 100;
 f0.female = 200;
 
@@ -76,7 +79,7 @@ playlist = {};
 for file = tf_mm_files'
     fprintf("Processing %s: ", file.name);
     [tf_mm, f_Hz] = read_tf(file);
-    % Low pass at 20 kHz
+    % Low pass at 12 kHz
 	tf_mm = tf_mm .* freqz(H_AA, length(tf_mm), 'whole');
     tokens = split(file.name, '_');
     
@@ -108,6 +111,9 @@ for file = tf_mm_files'
         y = resample(y, Fs_out, Fs_swb);  
         % Get rid of artifacts in the silent parts by windowing
         y = cleanupBweSignal(y, sil_s * Fs_out); 
+        
+        % Filter at 12 kHz
+        y = filtfilt(H_AA.sosMatrix, H_AA.ScaleValues, y);
 
         name = [item_name, '_bwe_', voice_qualities{vq}, '.wav'];
         filename = fullfile(outpath, name);
@@ -117,7 +123,7 @@ for file = tf_mm_files'
         %% Replace high-frequency range with 1d transfer function
         % Find corresponding 1d transfer function
         tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
-        % Low pass at 20 kHz
+        % Low pass at 12 kHz
         tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
         tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
         if tokens{1} == 'm'
@@ -148,6 +154,5 @@ x = x.*gain;
 end
 
 function writewav(filename, x, Fs)
-x = x / max(abs(x)) * 0.95;
 audiowrite(filename, x, Fs);
 end
