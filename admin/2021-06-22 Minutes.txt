@@ -1,0 +1,13 @@
+To Do Simon:
+Save the TF from VTL divided by 10 (in the API).
+Low-pass at 12 kHz because the audiometry can only test up to 12.5 kHz.
+Add option to switch between dB and linear amplitude in blend_tf
+
+Sound source:
+To Do Rémi: 
+Add an offset to the excitation signal
+Fix the TF of /o/ and /u/
+
+
+
+Next meeting: July 6, 3 pm
