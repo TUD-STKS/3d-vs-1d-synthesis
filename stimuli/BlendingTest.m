@@ -8,10 +8,11 @@ f_inf = 4000;  % Inflection frequency where the dominating transfer function cha
 Fs_Hz = 44100;
 
 %% Load some transfer functions
-[f_1d, f_Hz] = read_tf('../transfer-functions/1d/f_a_1d.txt');
-[m_1d, f2_Hz] = read_tf('../transfer-functions/1d/m_a_1d.txt');
-[f_mm, f3_Hz] = read_tf('../transfer-functions/multimodal/f_a_MM.txt');
-[m_mm, f4_Hz] = read_tf('../transfer-functions/multimodal/m_a_MM.txt');
+vowel = 'u';
+[f_1d, f_Hz] = read_tf(['../transfer-functions/1d/f_' vowel '_1d.txt']);
+[m_1d, f2_Hz] = read_tf(['../transfer-functions/1d/m_' vowel '_1d.txt']);
+[f_mm, f3_Hz] = read_tf(['../transfer-functions/multimodal/f_' vowel '_MM.txt']);
+[m_mm, f4_Hz] = read_tf(['../transfer-functions/multimodal/m_' vowel '_MM.txt']);
 
 %% Low-pass filter both transfer functions at 20 kHz to avoid aliasing
 f_1d = f_1d .* freqz(H_AA, length(f_1d), 'whole');
@@ -23,8 +24,8 @@ m_mm = m_mm .* freqz(H_AA, length(m_mm), 'whole');
 %% Blending
 figure(1);
 blend_tf(f_mm, f_1d, f_inf, Fs_Hz, 'dB')
-title('female /a/');
+title(['female /' vowel '/']);
 
 figure(2);
 blend_tf(m_mm, m_1d, f_inf, Fs_Hz, 'dB')
-title('male /a/');
+title(['male /' vowel '/']);
