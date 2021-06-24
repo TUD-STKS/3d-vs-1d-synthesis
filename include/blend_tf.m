@@ -52,14 +52,14 @@ else
     end
     
     hold on;
-    plot(f_Hz(1:length(blended_tf)/2), blended_tf(1:length(blended_tf)/2), 'b-');
-    plot(f_Hz(1:length(blended_tf)/2), tf_low(1:length(blended_tf)/2), '--');
-    plot(f_Hz(1:length(blended_tf)/2), tf_high(1:length(blended_tf)/2), ':');    
+    plot(f_Hz(f_Hz < 13e3), blended_tf(f_Hz < 13e3), 'b-');
+    plot(f_Hz(f_Hz < 13e3), tf_low(f_Hz < 13e3), '--');
+    plot(f_Hz(f_Hz < 13e3), tf_high(f_Hz < 13e3), ':');    
     yyaxis right;
 
-    plot(f_Hz(1:length(blended_tf)/2), H_lp(1:length(blended_tf)/2), ':');
-    plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2)), ':';
-    plot(f_Hz(1:length(blended_tf)/2), H_hp(1:length(blended_tf)/2) + H_lp(1:length(blended_tf)/2), ':');
+    plot(f_Hz(f_Hz < 13e3), H_lp(f_Hz < 13e3), ':');
+    plot(f_Hz(f_Hz < 13e3), H_hp(f_Hz < 13e3), ':');
+    plot(f_Hz(f_Hz < 13e3), H_hp(f_Hz < 13e3) + H_lp(f_Hz < 13e3), ':');
     hold off;
     xlabel('Frequency $f$ [Hz]')
     yyaxis left;

@@ -13,8 +13,8 @@ shapes = [
     ];
 
 outdir = "1d";
-%sex = "m"; 
-sex = "f";
+sex = "m"; 
+%sex = "f";
 %%
 N = 4096;  % Number of spectral samples (of the whole symmetric spectrum)
 if sex == "m"

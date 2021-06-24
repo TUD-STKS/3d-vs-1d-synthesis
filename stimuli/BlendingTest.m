@@ -22,9 +22,9 @@ m_mm = m_mm .* freqz(H_AA, length(m_mm), 'whole');
 
 %% Blending
 figure(1);
-blend_tf(f_mm, f_1d, f_inf, Fs_Hz)
+blend_tf(f_mm, f_1d, f_inf, Fs_Hz, 'dB')
 title('female /a/');
 
 figure(2);
-blend_tf(m_mm, m_1d, f_inf, Fs_Hz)
+blend_tf(m_mm, m_1d, f_inf, Fs_Hz, 'dB')
 title('male /a/');
