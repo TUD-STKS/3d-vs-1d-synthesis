@@ -9,6 +9,7 @@ OQ = params.OQ;
 SQ = params.SQ;
 TL = params.TL;
 SNR = params.SNR;
+DC = params.DC;
 
 T0 = 1.0;        
 te = OQ;
@@ -36,6 +37,9 @@ for i=1:N
     end
 end
 
+%% Add continuous component
+
+x = (x + DC*AMP)/(AMP*(1 + DC));
 
 %% Add the noise
 % In accordance with the implementation in VTL, the noise source is:
