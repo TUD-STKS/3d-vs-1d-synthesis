@@ -6,15 +6,15 @@ addpath('../include/VocalTractLabApi');
 %% List of shapes (as they appear in the speaker file)
 shapes = [
     "a_no-pf",
-    "e_no-pf",
+    "e_adjusted_tongue2",
     "i_no-pf",
     "o_no-pf",
     "u_no-pf"
     ];
 
 outdir = "1d";
-sex = "m"; 
-%sex = "f";
+% sex = "m"; 
+sex = "f";
 %%
 N = 4096;  % Number of spectral samples (of the whole symmetric spectrum)
 if sex == "m"
