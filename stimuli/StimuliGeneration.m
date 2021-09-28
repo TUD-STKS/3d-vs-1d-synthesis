@@ -51,7 +51,7 @@ Fs_out = Fs_mm;
 Finf = 4000;
 
 %% Excitation
-voice_qualities = {'modal', 'breathy', 'pressed'};
+voice_qualities = {'modal', 'pressed'};
 % voice_qualities = {'modal'};
 n_vq = length(voice_qualities);
 dc = [0.0 0.0 0.0];
@@ -122,7 +122,7 @@ for file = tf_mm_files'
 
         %% Replace high-frequency range with 1d transfer function
         % Find corresponding 1d transfer function
-        tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
+        tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"))/10;
         % Low pass at 12 kHz
         tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
         tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
