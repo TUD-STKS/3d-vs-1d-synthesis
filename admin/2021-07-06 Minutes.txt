@@ -1,0 +1,21 @@
+Observations:
+- female /e/ sounds like /i/ and /o/ like /u/ for all three phonations
+- breathy stimuli "extremely breathy"
+- breathy versions using BWE sound more "integrated" than the MM_MM ones. The MM_MM ones sound almost like two distinct sound sources, which is probably due to the high energy in the high frequency range. 
+-> Maybe the noise spectrum needs to have less high frequency content -> sharper filter
+
+Experimental design:
+- "Is there a difference?" not necessary, differences are pronounced enough
+- "Which one sounds more natural?" 
+    o Pair-wise comparison
+    o Single stimulus Likert test rating naturalness -> essentially rating how well the synthesized vowel quality matches the listeners' expectations
+
+
+To Do:
+Fine tune the shapes manually to a obtain clearer distinction (Rémi)
+Design a filter that approximates the function -9.4 dB/kHz from the Hillman paper (Simon)
+
+Next meeting: August 17, 4 pm (without Simon)
+
+
+

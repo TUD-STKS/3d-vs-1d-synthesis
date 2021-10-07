@@ -1,0 +1,27 @@
+Meeting on October 4th, 2021
+
+0. New female /e/ stimuli are accepted ("tongue2")
+1. Rémi shared a presentation on the methods of the study (slide deck in the repo)
+	Potentially possible to measure up to 20 kHz with a borrowed audiometer
+	But BWE can only go up to 16 kHz
+	Due to AA concerns in the BWE process and the rating of the used audiometer (up to 12.25 kHz) we will go with 12 kHz as the upper limit
+	
+	Exp 1: Do not include "none" option
+	Exp 2: Use a 0-100 slider instead of 5-point scale
+	
+2. Rémi noted that the level of the HF content in all stimuli is much lower than in natural speech
+	Peter suggested to acknowledge this problem but accept it for the purposes of our study
+
+3. Female /o/ had many confusions with /u/
+	Create better /o/
+
+4. Sound duration
+	Get timing and f0 contour from a natural sample
+
+To Do:
+Simon will copy duration and f0 from a 2 to 3 samples of his own speech. Scale f0 up for female voice. Target: 8. October
+Rémi will improve the /o/ and improve the experimental interface(s).
+
+Next meeting:
+October 18, 2021. 1 pm 
+Link: https://bbb.tu-dresden.de/b/sim-n5l-qro-2y8
