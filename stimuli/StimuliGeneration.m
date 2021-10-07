@@ -22,20 +22,17 @@ if ~exist(outpath, 'dir')
 end
 %% Parameters
 % Initial and final silence
-global sil_s;
 sil_s = 0.250;
-% Fade-in and out (in decimal percent)
-global fade;
-fade = 0.05;
-% Sound duration
-global dur_s;
-dur_s = 0.5;
+
+% Load natural pressure and f0 contours
+natural_ref = load('./ref/pressure_and_pitch.mat');
+
 % Output cutoff frequency
 fc_out = 12e3;
 
-% Fundamental frequencies
-f0.male = 100;
-f0.female = 200;
+% Fundamental frequencies (expressed as a multiplier on the reference f0)
+f0.male = 1;
+f0.female = 2;
 
 % Sampling rates
 oversampling = 4;
@@ -52,28 +49,36 @@ Finf = 4000;
 
 %% Excitation
 voice_qualities = {'modal', 'pressed'};
-% voice_qualities = {'modal'};
 n_vq = length(voice_qualities);
 dc = [0.0 0.0 0.0];
 
-contour.male = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.male];
-contour.female = [[0, 0.55*dur_s, dur_s]', [1, 1.2, 0.9]'*f0.female];
+contour.male = [natural_ref.f0_params(:,1), natural_ref.f0_params(:,2) * f0.male];
+contour.female = [natural_ref.f0_params(:,1), natural_ref.f0_params(:,2) * f0.female];
 
 % Glottal flow signals using the LF model
 Ug.male = [];
 Ug.female = [];
 for vq = 1 : n_vq
-    [ug, tmale] = get_excitation(contour.male, dc(vq), Fs_out, sil_s, fade, oversampling, voice_qualities{vq}, 'male');
+    [ug, tmale] = get_excitation(contour.male, dc(vq), Fs_out, oversampling, voice_qualities{vq}, 'male');
     Ug.male = [Ug.male, ug];
-    [ug, tfemale] = get_excitation(contour.female, dc(vq), Fs_out, sil_s, fade, oversampling, voice_qualities{vq},'female');
+    [ug, tfemale] = get_excitation(contour.female, dc(vq), Fs_out, oversampling, voice_qualities{vq},'female');
     Ug.female = [Ug.female, ug];
 end
-% figure(1);
-% subplot(2,1,1);
-% plot(tmale, Ug.male)
-% subplot(2,1,2);
-% plot(tfemale, Ug.female)
+%  figure(1);
+%  subplot(2,1,1);
+%  plot(tmale, Ug.male)
+%  subplot(2,1,2);
+%  plot(tfemale, Ug.female)
+ 
+% Shape using the natural pressure contour
+p_male = padarray(natural_ref.pressure_contour, length(Ug.male) - length(natural_ref.pressure_contour), 'post');
+p_female = padarray(natural_ref.pressure_contour, length(Ug.female) - length(natural_ref.pressure_contour), 'post');
+Ug.male = Ug.male .* p_male;
+Ug.female = Ug.female .* p_female;
 
+% Add initial and final silence
+Ug.male = padarray(Ug.male, floor(sil_s * Fs_out), 'both');
+Ug.female = padarray(Ug.female, floor(sil_s * Fs_out), 'both');
 %% Synthesize
 playlist = {};
 for file = tf_mm_files'
