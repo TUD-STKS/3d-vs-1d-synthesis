@@ -117,6 +117,7 @@ end
 function rateSound(hObject,eventdata)
   st = guidata(hObject);
   st.testData(st.stimuliTested,2) = get (st.ratingSlider, "value");
+  set(st.next, "enable", "on");
   guidata(hObject, st);
 end
 ###################################
@@ -146,6 +147,7 @@ function nextTraining(hObject, eventdata)
 ##      set(dataStruct.ratingSlider, 'value', 0.5)
 
 		  guidata(hObject, dataStruct);
+      set(hObject, "enable", "off");
       playSound (hObject, eventdata);
     else
 			## reinitialise line 2
@@ -161,6 +163,7 @@ function nextTraining(hObject, eventdata)
 
 			set(dataStruct.next, "callback", @next);
 			guidata(hObject, dataStruct);
+      set(hObject, "enable", "off");
       playSound (hObject, eventdata)
 		endif
   endif
@@ -226,6 +229,7 @@ function next(hObject, eventdata)
 ##      set(dataStruct.ratingSlider, 'value', 0.5);
 
       guidata(hObject,dataStruct);
+      set(hObject, "enable", "off");
       playSound (hObject, eventdata)
       
       ## Change name of next button for last pair
@@ -312,13 +316,13 @@ dataStruct.textTraining = uicontrol (h, "style", "text", "string", ...
 
 dataStruct.textNotNatural = uicontrol (h, "style", "text", "string", ...
 "pas du tout\nnaturel", "units", "normalized",...
-"position",[0.01 0.4 0.2 0.2], "backgroundcolor", bgcolor, ...
+"position",[0.01 0.6 0.2 0.2], "backgroundcolor", bgcolor, ...
 "fontunits","normalized","fontsize", 0.5*normalizedFtSize,...
 "fontweight","bold","units", "normalized","foregroundcolor", [0 0 0]);
 
 dataStruct.textTotallyNatural = uicontrol (h, "style", "text", "string", ...
 "totalement\nnaturel", ...
-"units", "normalized","position",[0.72 0.4 0.3 0.2],...
+"units", "normalized","position",[0.72 0.6 0.3 0.2],...
 "fontunits","normalized","fontsize", 0.5*normalizedFtSize,...
 "backgroundcolor", bgcolor, "fontweight","bold",...
 "foregroundcolor", [0 0 0]);
@@ -332,7 +336,7 @@ dataStruct.ratingSlider = uicontrol ("style", "slider",
                             "string", "slider",
                             "callback", @rateSound,
                             "value", 0.5,
-                            "position", [0.1 0.3 0.78 0.05]);
+                            "position", [0.1 0.5 0.78 0.05]);
 
 
 ###############################################
@@ -340,14 +344,14 @@ dataStruct.ratingSlider = uicontrol ("style", "slider",
 ###############################################
 
 dataStruct.hSon = uicontrol (h, "string", "Son", ...
-"units", "normalized","position",[0.4 0.7 0.2 0.1], ...
+"units", "normalized","position",[0.4 0.3 0.2 0.1], ...
 "callback", {@playSound}, "fontunits","normalized","fontsize", normalizedFtSize,...
 "backgroundcolor",[192/255 192/255 192/255],...
 "foregroundcolor", [0 0 0],"fontweight","bold");
  
 dataStruct.next = uicontrol (h, "string", "suivant",...
 "backgroundcolor", [192/255 192/255 192/255],...
- "units","normalized","position",[0.7 0.1 0.2 0.1],...
+ "units","normalized","position",[0.4 0.2 0.2 0.1],...
  "foregroundcolor", [0 0 0],"fontunits","normalized",...
  "fontsize", normalizedFtSize,
  "callback", {@nextTraining}, "fontweight","bold");
