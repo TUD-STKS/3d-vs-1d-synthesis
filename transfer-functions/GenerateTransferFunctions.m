@@ -8,7 +8,7 @@ shapes = [
     "a_no-pf",
     "e_adjusted_tongue2",
     "i_no-pf",
-    "o_no-pf",
+    "o_Peter",
     "u_no-pf"
     ];
 
