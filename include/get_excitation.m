@@ -1,4 +1,4 @@
-function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling, params, gender)
+function [Ug, t] = get_excitation(f0, dc, Fs, oversampling, params, gender)
 %GET_EXCITATION This function returns a glottal flow signal with a
 %specified f0 contour, voice quality, padded silence, and fade-in and out.
 %   Fs: Sampling rate
@@ -9,12 +9,12 @@ function [Ug, t] = get_excitation(f0, dc, Fs, silence_s, fade, oversampling, par
 %   The specified values are interpolated using clamped spline
 %   interpolation
 
-if nargin < 7
+if nargin < 5
     params = 'modal';
     gender = 'male';
 end
 
-if nargin < 8
+if nargin < 6
    gender = 'male';
 end
 
@@ -42,11 +42,10 @@ end
 flow_dc = dc * max(Ug);
 Ug = flow_dc + Ug;
 
-% Fade-in and out
-Ug = Ug .* tukeywin(length(Ug), fade*2);
+% Extend time vector if necessary
+if length(t) < length(Ug)
+    t = linspace(0, length(Ug)/Fs, length(Ug));
+end
 
-% Zero-padding
-Ug = padarray(Ug, silence_s * Fs);
-t = 0:length(Ug)-1 / Fs;
 end
 
