@@ -28,12 +28,15 @@ end
 ## participant | groupe | idSon1 | idSon2 | nbPlaySnd1 | nbPlaySnd2 | result | retest | idx pair | order |
 ##                                                                                                 pair
 
+##      11      |
+## snd selected |
+
 ## generate structure containing the file names, the sound names,
 ## the groupe names, the number of stimuli types, the number of
 ## pairs, the indexes of the pairs (1 to num of pairs), the index
 ## of the pair currently tested, the data to save in the csv file 
 
-testMode = true;
+testMode = false;
 
 if testMode
   ## To test the interface with a minimal number of stimuli
@@ -56,7 +59,7 @@ if testMode
   "f_a_bwe", "f_e_bwe"}}, ...
   "grpNames", {{"MM-1D", "MM-BWE", "1D-BWE"}}, ...
   "nStimuli", nStimuli, "nPairs", 2*nPairs, "pairs", [1:nPairs 1:nPairs], "pairTested", 1, ...
-  "testData", zeros(2*nPairs, 10), "hSon2MostNatural", 0, "csvFile", ...
+  "testData", zeros(2*nPairs, 11), "hSon2MostNatural", 0, "csvFile", ...
   sprintf("participant_%d.csv", subject), ...
   "csvFile_ordered",sprintf("participant_%d_ordered.csv", subject),"comaSeparator", ";");
 else
@@ -198,6 +201,10 @@ end
 
 function rateSon1MostNatural(hObject, eventdata)
 	st = guidata(hObject);
+  ## indicate that sound 1 have been selected as the most natural
+  st.testData(st.pairTested, 11) = 1;
+  ## indicate if the hypothesis (ex 3D more natural than bwe) 
+  ## is verified (1) or not (0)
   if st.testData(st.pairTested, 10) == 1
     st.testData(st.pairTested,7) = 1;
 	else
@@ -220,6 +227,10 @@ end
 
 function rateSon2MostNatural(hObject, eventdata)
 	st = guidata(hObject);
+  ## indicate that sound 2 have been selected as the most natural
+  st.testData(st.pairTested, 11) = 2;
+  ## indicate if the hypothesis (ex 3D more natural than bwe) 
+  ## is verified (1) or not (0)
   if st.testData(st.pairTested, 10) == 1
     st.testData(st.pairTested,7) = 0;
 	else
@@ -236,6 +247,53 @@ function rateSon2MostNatural(hObject, eventdata)
   else
     nextPair(hObject, eventdata);
   end
+end
+
+# # # # # # # # # # # # # # # # # # # # # # # # 
+
+function writeRawDataToCsv(hObject, eventdata)
+  dataStruct = guidata(hObject);
+  fid = fopen(dataStruct.csvFile, "w");
+  sep = dataStruct.comaSeparator;
+
+  ## generate header
+  fputs(fid, ["Participant" sep ...
+  "Sound 1" sep ...
+  "Sound 2" sep ...
+  "Gender" sep ...
+  "Vowel" sep ...
+  "Voice quality" sep ...
+  "Pair type" sep ...
+  "Num listen snd 1" sep ...
+  "Num listen snd 2" sep ...
+  "pair order" sep ...
+  "re-test" sep ...
+  "Selected snd" sep ...
+  "Evaluation\n"]); 
+
+  ## loop over the pairs
+  for ii = 1:(dataStruct.pairTested) 
+    fileName = dataStruct.fileNames{dataStruct.testData(ii,3)};
+    gender = fileName(1);
+    vowel = fileName(3);
+    [o1, o2, o3, voiceQuality] = regexp(fileName, "[^_.]{5,7}");
+    str = [num2str(dataStruct.testData(ii,1)) sep ... participant
+    dataStruct.sndNames{dataStruct.testData(ii,3)} sep ... sound 1
+    dataStruct.sndNames{dataStruct.testData(ii,4)} sep ... sound 2
+    gender sep ...                                         gender
+    vowel sep ...                                          vowel
+    voiceQuality{1} sep ...                               voice quality
+    dataStruct.grpNames{dataStruct.testData(ii,2)} sep ... group
+    num2str(dataStruct.testData(ii,5)) sep ... nb ecoute sound 1
+    num2str(dataStruct.testData(ii,6)) sep ... nb ecoute sound 2
+    num2str(dataStruct.testData(ii,10)) sep ... pair order
+    num2str(dataStruct.testData(ii,8)) sep ... retest
+    num2str(dataStruct.testData(ii,11)) sep ... selected sound
+    num2str(dataStruct.testData(ii,7)) sep ... evaluation
+    sprintf("\n")];
+    fputs(fid, str);
+  endfor
+  fclose(fid);  
 end
 
 # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -415,32 +473,11 @@ function nextPair (hObject, eventdata)
         endswitch
 			endif
 
-#			printf("Stimuli %d and %d \n", dataStruct.testData(dataStruct.pairTested, 3), ...
-#				dataStruct.testData(dataStruct.pairTested, 4));fflush(stdout);
-
 			## remove the pair tested from the pair list
 			dataStruct.pairs = [dataStruct.pairs(1:pairId-1) dataStruct.pairs(pairId+1:end)];
 
 			## save result
-			fid = fopen(dataStruct.csvFile, "w");
-			sep = dataStruct.comaSeparator;
-			fputs(fid, sprintf("Participant%sGroupe%sSon1%sSon2%snb ecoute son1%snb ecoute son2%sre-test%sevaluation%spair order\n", sep, sep, sep, sep, sep, sep, sep, sep));
-		
-			## loop over the pairs
-			for ii = 1:(dataStruct.pairTested - 1) 
-				str = sprintf("%d%s%s%s%s%s%s%s%d%s%d%s%d%s%d%s%d\n", ...
-				dataStruct.testData(ii,1), sep, ...
-				dataStruct.grpNames{dataStruct.testData(ii,2)}, sep, ...
-				dataStruct.sndNames{dataStruct.testData(ii,3)}, sep, ...
-				dataStruct.sndNames{dataStruct.testData(ii,4)}, sep, ...
-				dataStruct.testData(ii,5), sep, ...
-				dataStruct.testData(ii,6), sep, dataStruct.testData(ii,8), sep, ...
-				dataStruct.testData(ii,7), sep, dataStruct.testData(ii,10));
-				fputs(fid, str);
-			endfor
-			fclose(fid);
-      
-##      printf("\nResults saved\n")
+      writeRawDataToCsv(hObject, eventdata);
 
 			## display advancement
 			set(dataStruct.textNumPair, "string", sprintf("Paire %d sur %d", ...
@@ -452,25 +489,9 @@ function nextPair (hObject, eventdata)
       playSound2 (hObject, eventdata);
 
 		else
-
-#			csvFile = sprintf("participant_%d.csv", dataStruct.testData(1,1));
-			fid = fopen(dataStruct.csvFile, "w");
-			sep = dataStruct.comaSeparator;
-			fputs(fid, sprintf("Participant%sGroupe%sSon1%sSon2%snb ecoute son1%snb ecoute son2%sre-test%sevaluation%spair order\n", sep, sep, sep, sep, sep, sep, sep, sep));
-		
-			## loop over the pairs
-			for ii = 1:dataStruct.nPairs
-				str = sprintf("%d%s%s%s%s%s%s%s%d%s%d%s%d%s%d%s%d\n", ...
-				dataStruct.testData(ii,1), sep, ...
-				dataStruct.grpNames{dataStruct.testData(ii,2)}, sep, ...
-				dataStruct.sndNames{dataStruct.testData(ii,3)}, sep, ...
-				dataStruct.sndNames{dataStruct.testData(ii,4)}, sep, ...
-				dataStruct.testData(ii,5), sep, ...
-				dataStruct.testData(ii,6), sep, dataStruct.testData(ii,8), sep, ...
-				dataStruct.testData(ii,7), sep, dataStruct.testData(ii,10));
-				fputs(fid, str);
-			endfor
-			fclose(fid);
+    
+      writeRawDataToCsv(hObject, eventdata);
+      
 			set(dataStruct.textNumPair, "string", "Terminé!");
 			#X = dataStruct.X; Y = dataStruct.Y;
 			set(dataStruct.textQuestion, "string", "Données enregistrées");
@@ -485,50 +506,79 @@ function nextPair (hObject, eventdata)
       ###########################################
       
       fid1 = fopen(dataStruct.csvFile);
-      t = textscan(fid1,"%s %s %s %s %s %s %s %s %s", 'delimiter', sep);
+      sep = dataStruct.comaSeparator;
+      t = textscan(fid1,"%s %s %s %s %s %s %s %s %s %s %s %s %s", 'delimiter', sep);
       fclose(fid1);
       
+      ## sort data
       m = cell2mat(t);
-      idxa = strcmp({m{:,2}},'MM-1D');
-      a = sortrows(m(idxa,:),3);   # sort accordding to phonemes
-      idxb = strcmp({m{:,2}},'MM-BWE');
-      b = sortrows(m(idxb,:),3);
-      idxc = strcmp({m{:,2}},'1D-BWE')
-      c = sortrows(m(idxc,:),3);
+      idxa = strcmp({m{:,7}},'MM-1D');
+      a = sortrows(m(idxa,:), 3);   # sort accordding to phonemes and gender
+      a = sortrows(a,6);            # sort according to voice quality
+      idxb = strcmp({m{:,7}},'MM-BWE');
+      b = sortrows(m(idxb,:),3);    # sort accordding to phonemes and gender
+      b = sortrows(b, 6);           # sort according to voice quality
+      idxc = strcmp({m{:,7}},'1D-BWE');
+      c = sortrows(m(idxc,:),3);    # sort accordding to phonemes and gender
+      c = sortrows(c, 6);           # sort according to voice quality
       res = [a;b;c];
       
-      idx = strcmp({res{:,7}},'1'); % find data of retest
+      ## find data of retest
+      idx = strcmp({res{:,11}},'1'); 
       res_retest = res(idx,:);
       res = res(~idx,:);
-      result = [res(:,1:6) res(:,8) res_retest(:,5:6) res_retest(:,8:9)]; 
+      result = [res(:,1:9) res(:,13) res_retest(:,8:9) res_retest(:,13)]; 
       
       fid2 = fopen(dataStruct.csvFile_ordered, "w");
-      fputs(fid2, sprintf("%s%s%s%stest%stest%stest%sre-test%sre-test%sre-test%s\n", sep,sep, sep, sep, sep, sep, sep, sep, sep,sep));
-      fputs(fid2, sprintf("Participant%sGroupe%sSon1%sSon2%snb ecoute son1%snb ecoute son2%sevaluation%snb ecoute son1%snb ecoute son2%sevaluation\n", sep,sep, sep, sep, sep, sep, sep, sep, sep));
+
+      ## generate header
+      fputs(fid2, [sep ...
+      sep ...
+      sep ...
+      sep ...
+      sep ...
+      sep ...
+      sep ...
+      "Test" sep ...
+      "Test" sep ...
+      "Test" sep ...
+      "Re-test" sep ...
+      "Re-test" sep ...
+      "Re-test\n"]);
+
+      fputs(fid2, ["Participant" sep ...
+      "Sound 1" sep ...
+      "Sound 2" sep ...
+      "Gender" sep ...
+      "Vowel" sep ...
+      "Voice quality" sep ...
+      "Pair type" sep ...
+      "Num listen snd 1" sep ...
+      "Num listen snd 2" sep ...
+      "Evaluation" sep ... 
+      "Num listen snd 1" sep ...
+      "Num listen snd 2" sep ...
+      "Evaluation\n"]);
       
-      #cell2csv ('participant_1_ordered.csv', result, ";");
-      
+      ## write data
       for i = 1:size(result,1)
-        str = sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s\n", ...
-        result{i,1}, sep, ...
-        result{i,2}, sep, ...
-        result{i,3}, sep, ...
-        result{i,4}, sep, ...
-        result{i,5}, sep, ...
-        result{i,6}, sep, ...
-        result{i,7}, sep, ...
-        result{i,8}, sep, ...
-        result{i,9}, sep,...
-        result{i,10});
-        fputs(fid2, str);
+        fputs(fid2, [result{i,1} sep ... Participant
+        result{i,2} sep ... Sound 1
+        result{i,3} sep ... Sound 2
+        result{i,4} sep ... Gender
+        result{i,5} sep ... Vowel
+        result{i,6} sep ... Voice quality
+        result{i,7} sep ... Pair type
+        result{i,8} sep ... Num listen snd 1
+        result{i,9} sep ... Num listen snd 2
+        result{i,10} sep ... Evaluation
+        result{i,11} sep ... Num listen snd 1
+        result{i,12} sep ... Num listen snd 2
+        result{i,13} "\n"]); ## Evaluation
       endfor
       fclose(fid2);
       
 		endif
-    
-##    ## play sounds
-##    playSound1 (hObject, eventdata);
-##    playSound2 (hObject, eventdata);
 		
 		## reset selected buttons highlight
 		set(dataStruct.hSon2MostNatural, "backgroundcolor", [1 1 1], "fontweight", "normal");
@@ -559,11 +609,6 @@ dataStruct.textQuestion = uicontrol (h, "style", "text", "string", ...
 "", ...
 "units","normalized","position",[0.3 0.5 0.4 0.1],...
  "backgroundcolor", [1 1 1], "fontunits","normalized","fontsize", 0.9*normFtSize);
-
-##dataStruct.textOu = uicontrol (h, "style", "text", "string", ...
-##"ou", ...
-##"units","normalized","position",[0.34 0.35 0.3 0.1],...
-## "backgroundcolor", [1 1 1],"fontunits","normalized","fontsize", normFtSize);
 
 
 ###############################################
