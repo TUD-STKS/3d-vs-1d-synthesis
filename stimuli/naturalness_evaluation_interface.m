@@ -144,7 +144,7 @@ function nextTraining(hObject, eventdata)
 
       set(dataStruct.textNumPair, "string", sprintf("SON %d / 2", ...
       dataStruct.currTrainingStimuli));
-##      set(dataStruct.ratingSlider, 'value', 0.5)
+      set(dataStruct.ratingSlider, 'value', 0.5)
 
 		  guidata(hObject, dataStruct);
       set(hObject, "enable", "off");
@@ -154,7 +154,7 @@ function nextTraining(hObject, eventdata)
 			dataStruct.testData(2, 3:end) = 0;
 			dataStruct.testData(2, 2) = -1;
       dataStruct.stimuliTested = 1;
-##      set(dataStruct.ratingSlider, 'value', 0.5)
+      set(dataStruct.ratingSlider, 'value', 0.5)
 
 			## display advancement
 			set(dataStruct.textTraining, "visible", "off");
@@ -226,7 +226,7 @@ function next(hObject, eventdata)
       
       set(dataStruct.textNumPair, "string", sprintf("SON %d / %d", ...
       dataStruct.stimuliTested, dataStruct.nStimuli));
-##      set(dataStruct.ratingSlider, 'value', 0.5);
+      set(dataStruct.ratingSlider, 'value', 0.5);
 
       guidata(hObject,dataStruct);
       set(hObject, "enable", "off");
@@ -337,14 +337,25 @@ dataStruct.ratingSlider = uicontrol ("style", "slider",
                             "callback", @rateSound,
                             "value", 0.5,
                             "position", [0.1 0.5 0.78 0.05]);
+                            
+###############################################
+## SLIDER GRADUATIONS
+###############################################
 
+dataStruct.graduations = axes("position", [0.1 0.48 0.78 0.05],
+##"color", [0.9, 0.95, 1],
+"xtick", [0:10:100],
+"ytick", [],
+"xlim", [0, 100],
+"ylim", [0, 1],
+"fontsize", 18);
 
 ###############################################
 ##  BUTTONS
 ###############################################
 
 dataStruct.hSon = uicontrol (h, "string", "Son", ...
-"units", "normalized","position",[0.4 0.3 0.2 0.1], ...
+"units", "normalized","position",[0.4 0.7 0.2 0.1], ...
 "callback", {@playSound}, "fontunits","normalized","fontsize", normalizedFtSize,...
 "backgroundcolor",[192/255 192/255 192/255],...
 "foregroundcolor", [0 0 0],"fontweight","bold");
