@@ -9,6 +9,8 @@ addpath('../include/VocalTractLabApi')
 
 load('filters.mat');
 
+plot_blended_tf = true;
+
 %% Transfer functions
 tf_mm_path = '../transfer-functions/multimodal';
 tf_mm_files = dir([tf_mm_path, '/*.txt']);
@@ -127,10 +129,32 @@ for file = tf_mm_files'
 
         %% Replace high-frequency range with 1d transfer function
         % Find corresponding 1d transfer function
-        tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"))/10;
+        tf_1d = read_tf(fullfile(tf_1d_path, string(join(tokens(1:2), '_')) + "_1d.txt"));
         % Low pass at 12 kHz
         tf_1d = tf_1d .* freqz(H_AA, length(tf_1d), 'whole');
         tf_blend = blend_tf(tf_mm, tf_1d, Finf, Fs_mm); 
+        
+        % plot blended transfer function
+        if plot_blended_tf
+            figure, 
+            subplot 211
+            plot(20*log10(abs(tf_blend)), 'linewidth', 2)
+            hold on
+            plot(20*log10(abs(tf_1d)))
+            plot(20*log10(abs(tf_mm)))
+            xlim([0 1300])
+            ylim([-100 20])
+            title(string(join(tokens(1:2), '_')))
+            legend('blend', '1d', 'mm', 'location', 'southeast')
+
+            subplot 212
+            hold on
+            plot(angle(tf_blend), 'linewidth', 2)
+            plot(angle(tf_1d))
+            plot(angle(tf_mm))
+            xlim([0 1300])
+        end
+        
         if tokens{1} == 'm'
             y = synthesize_from_tf(Ug.male(:,vq), tf_blend);
         elseif tokens{1} == 'f'
