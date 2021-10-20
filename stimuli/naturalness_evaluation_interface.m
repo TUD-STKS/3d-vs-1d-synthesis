@@ -388,9 +388,10 @@ dataStruct.ratingSlider = uicontrol ("style", "slider",
 ## SLIDER GRADUATIONS
 ###############################################
 
-dataStruct.graduations = axes("position", [0.1 0.48 0.78 0.05],
+dataStruct.graduations = axes("position", [0.145 0.48 0.69 0.05],
 ##"color", [0.9, 0.95, 1],
 "xtick", [0:10:100],
+"xticklabel", {"0", "", "", "", "", "50", "", "", "", "", "100"},
 "ytick", [],
 "xlim", [0, 100],
 "ylim", [0, 1],
@@ -400,7 +401,7 @@ dataStruct.graduations = axes("position", [0.1 0.48 0.78 0.05],
 ##  BUTTONS
 ###############################################
 
-dataStruct.hSon = uicontrol (h, "string", "Son", ...
+dataStruct.hSon = uicontrol (h, "string", "Ecouter", ...
 "units", "normalized","position",[0.4 0.7 0.2 0.1], ...
 "callback", {@playSound}, "fontunits","normalized","fontsize", normalizedFtSize,...
 "backgroundcolor",[192/255 192/255 192/255],...
