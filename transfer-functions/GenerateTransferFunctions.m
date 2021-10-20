@@ -4,23 +4,37 @@ clear all; close all;
 addpath('../include/VocalTractLabApi');
 
 %% List of shapes (as they appear in the speaker file)
-shapes = [
+% shapes = [
+%     "a_no-pf",
+%     "e_adjusted_tongue2",
+%     "i_no-pf",
+%     "o_Peter",
+%     "u_no-pf"
+%     ];
+
+outdir = "1d";
+sex = "m"; 
+% sex = "f";
+%%
+N = 4096;  % Number of spectral samples (of the whole symmetric spectrum)
+if sex == "m"
+    vtl = VTL('../speaker-files/male.speaker');
+    shapes = [
+    "a_no-pf",
+    "e_no-pf",
+    "i_no-pf",
+    "o_no-pf",
+    "u_no-pf"
+    ];
+elseif sex == "f"
+    vtl = VTL('../speaker-files/female.speaker');
+    shapes = [
     "a_no-pf",
     "e_adjusted_tongue2",
     "i_no-pf",
     "o_Peter",
     "u_no-pf"
     ];
-
-outdir = "1d";
-% sex = "m"; 
-sex = "f";
-%%
-N = 4096;  % Number of spectral samples (of the whole symmetric spectrum)
-if sex == "m"
-    vtl = VTL('../speaker-files/male.speaker');
-elseif sex == "f"
-    vtl = VTL('../speaker-files/female.speaker');
 end
     
 opts = vtl.default_transfer_function_options();
