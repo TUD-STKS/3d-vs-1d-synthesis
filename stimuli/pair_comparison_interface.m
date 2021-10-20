@@ -20,7 +20,7 @@ hs = inputdlg (prompt, "Entrer le numero du participant", rowscols) ;
 subject = str2num(hs{1});
 if exist(sprintf("participant_%d.csv", subject),'file')!=0
   
-  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe dÃ©jÃ .", subject));
+  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe déjà.", subject));
 
 end
 ## test data
@@ -36,7 +36,7 @@ end
 ## pairs, the indexes of the pairs (1 to num of pairs), the index
 ## of the pair currently tested, the data to save in the csv file 
 
-testMode = false;
+testMode = true;
 
 if testMode
   ## To test the interface with a minimal number of stimuli
@@ -264,29 +264,39 @@ function writeRawDataToCsv(hObject, eventdata)
   "Vowel" sep ...
   "Voice quality" sep ...
   "Pair type" sep ...
+  "Condition 1" sep ...
+  "Condition 2" sep ...
   "Num listen snd 1" sep ...
   "Num listen snd 2" sep ...
-  "pair order" sep ...
+##  "pair order" sep ...
   "re-test" sep ...
   "Selected snd" sep ...
   "Evaluation\n"]); 
 
   ## loop over the pairs
   for ii = 1:(dataStruct.pairTested) 
-    fileName = dataStruct.fileNames{dataStruct.testData(ii,3)};
-    gender = fileName(1);
-    vowel = fileName(3);
-    [o1, o2, o3, voiceQuality] = regexp(fileName, "[^_.]{5,7}");
+    ## extract data from file name
+    fileName1 = dataStruct.fileNames{dataStruct.testData(ii,3)};
+    gender = fileName1(1);
+    vowel = fileName1(3);
+    [o1, o2, o3, voiceQuality] = regexp(fileName1, "[^_.]{5,7}");
+    [o1, o2, o3, condition1] = regexp(fileName1, "MM_[^_]{2,3}");
+    fileName2 = dataStruct.fileNames{dataStruct.testData(ii,4)};
+    [o1, o2, o3, condition2] = regexp(fileName2, "MM_[^_]{2,3}");
+    
+    ## write data in csv file
     str = [num2str(dataStruct.testData(ii,1)) sep ... participant
     dataStruct.sndNames{dataStruct.testData(ii,3)} sep ... sound 1
     dataStruct.sndNames{dataStruct.testData(ii,4)} sep ... sound 2
     gender sep ...                                         gender
     vowel sep ...                                          vowel
     voiceQuality{1} sep ...                               voice quality
-    dataStruct.grpNames{dataStruct.testData(ii,2)} sep ... group
+    dataStruct.grpNames{dataStruct.testData(ii,2)} sep ... pair type
+    condition1{1}(4:end) sep ...                      condition 1
+    condition2{1}(4:end) sep ...                      condition 2
     num2str(dataStruct.testData(ii,5)) sep ... nb ecoute sound 1
     num2str(dataStruct.testData(ii,6)) sep ... nb ecoute sound 2
-    num2str(dataStruct.testData(ii,10)) sep ... pair order
+##    num2str(dataStruct.testData(ii,10)) sep ... pair order
     num2str(dataStruct.testData(ii,8)) sep ... retest
     num2str(dataStruct.testData(ii,11)) sep ... selected sound
     num2str(dataStruct.testData(ii,7)) sep ... evaluation
@@ -308,7 +318,7 @@ function nextPairTraining(hObject, eventdata)
 	if or(dataStruct.testData(dataStruct.pairTested, 5) == 0,
     dataStruct.testData(dataStruct.pairTested, 6) == 0) 
 
-		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour Ã©couter les sons Ã  comparer."));
+		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour écouter les sons à  comparer."));
 		
 	elseif dataStruct.testData(dataStruct.pairTested, 7) == -1
 		
@@ -382,7 +392,7 @@ function nextPair (hObject, eventdata)
 	## check if the sounds have been listened
 	if or(dataStruct.testData(dataStruct.pairTested, 5) == 0,
     dataStruct.testData(dataStruct.pairTested, 6) == 0) 
-		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour Ã©couter les sons Ã  comparer."));
+		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour écouter les sons à  comparer."));
   ## check if the previous pair have been rated
 	elseif dataStruct.testData(dataStruct.pairTested, 7) == -1
 		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Le son 1 est le plus naturel] ou [Le son 2 est le plus naturel]."));
@@ -492,9 +502,9 @@ function nextPair (hObject, eventdata)
     
       writeRawDataToCsv(hObject, eventdata);
       
-			set(dataStruct.textNumPair, "string", "TerminÃ©!");
+			set(dataStruct.textNumPair, "string", "Terminé!");
 			#X = dataStruct.X; Y = dataStruct.Y;
-			set(dataStruct.textQuestion, "string", "DonnÃ©es enregistrÃ©es");
+			set(dataStruct.textQuestion, "string", "Données enregistrées");
 			set(dataStruct.hSon1, "visible", "off");
 			set(dataStruct.hSon2, "visible", "off");
 			set(dataStruct.hSon2MostNatural, "visible", "off");
@@ -507,7 +517,7 @@ function nextPair (hObject, eventdata)
       
       fid1 = fopen(dataStruct.csvFile);
       sep = dataStruct.comaSeparator;
-      t = textscan(fid1,"%s %s %s %s %s %s %s %s %s %s %s %s %s", 'delimiter', sep);
+      t = textscan(fid1,"%s %s %s %s %s %s %s %s %s %s %s %s %s %s", 'delimiter', sep);
       fclose(fid1);
       
       ## sort data
@@ -524,15 +534,17 @@ function nextPair (hObject, eventdata)
       res = [a;b;c];
       
       ## find data of retest
-      idx = strcmp({res{:,11}},'1'); 
+      idx = strcmp({res{:,12}},'1'); 
       res_retest = res(idx,:);
       res = res(~idx,:);
-      result = [res(:,1:9) res(:,13) res_retest(:,8:9) res_retest(:,13)]; 
+      result = [res(:,1:11) res(:,14) res_retest(:,10:11) res_retest(:,14)]; 
       
       fid2 = fopen(dataStruct.csvFile_ordered, "w");
 
       ##Â generate header
       fputs(fid2, [sep ...
+      sep ...
+      sep ...
       sep ...
       sep ...
       sep ...
@@ -553,6 +565,8 @@ function nextPair (hObject, eventdata)
       "Vowel" sep ...
       "Voice quality" sep ...
       "Pair type" sep ...
+      "Condition 1" sep ...
+      "Condition 2" sep ...
       "Num listen snd 1" sep ...
       "Num listen snd 2" sep ...
       "Evaluation" sep ... 
@@ -569,12 +583,14 @@ function nextPair (hObject, eventdata)
         result{i,5} sep ... Vowel
         result{i,6} sep ... Voice quality
         result{i,7} sep ... Pair type
-        result{i,8} sep ... Num listen snd 1
-        result{i,9} sep ... Num listen snd 2
-        result{i,10} sep ... Evaluation
-        result{i,11} sep ... Num listen snd 1
-        result{i,12} sep ... Num listen snd 2
-        result{i,13} "\n"]); ## Evaluation
+        result{i,8} sep ... Condition 1
+        result{i,9} sep ... Condition 2
+        result{i,10} sep ... Num listen snd 1
+        result{i,11} sep ... Num listen snd 2
+        result{i,12} sep ... Evaluation
+        result{i,13} sep ... Num listen snd 1
+        result{i,14} sep ... Num listen snd 2
+        result{i,15} "\n"]); ## Evaluation
       endfor
       fclose(fid2);
       
