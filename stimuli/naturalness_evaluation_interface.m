@@ -24,7 +24,7 @@ rowscols = [1];
 hs = inputdlg (prompt, "Entrer le numero du participant", rowscols) ;	
 subject = str2num(hs{1});
 if exist(sprintf("participant_%d.csv", subject),'file')!=0
-  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe d√©j√†.", subject));
+  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe dÈj‡†.", subject));
 end
 
 
@@ -121,11 +121,50 @@ function rateSound(hObject,eventdata)
   guidata(hObject, st);
 end
 ###################################
+function saveRawDataAsCsv(hObject,eventdata)
+  dataStruct = guidata(hObject);
+  csvFile = sprintf("participant_%d.csv", dataStruct.testData(1,1));
+  fid = fopen(csvFile, "w");
+  sep = dataStruct.comaSeparator;
+
+  ## Generate header
+  fputs(fid, ["Participant" sep ...
+  "File name" sep ...
+  "Gender" sep ...
+  "Vowel" sep ...
+  "Voice quality" sep ...
+  "Condition" sep ...
+  "Num listen" sep ...
+  "Re-test" sep ...
+  "Evaluation\n"]);
+  
+  ## Write data
+  for ii = 1:(dataStruct.stimuliTested)
+    ## extract data from file name
+    fileName = dataStruct.files{dataStruct.testData(ii,4)};
+    gender = fileName(1);
+    vowel = fileName(3);
+    [o1, o2, o3, voiceQuality] = regexp(fileName, "[^_.]{5,7}");
+    [o1, o2, o3, condition] = regexp(fileName, "MM_[^_]{2,3}");
+    ## write data in csv file
+    fputs(fid, [num2str(dataStruct.testData(ii,1)) sep...  Participant
+    fileName sep ...                                                          File name
+    gender sep ...                                                              gender
+    vowel sep ...                                                                vowel
+    voiceQuality{1} sep ...                                            voice quality
+    condition{1}(4:end) sep ...                                    condition
+    num2str(dataStruct.testData(ii,3)) sep ...      Num listen
+    num2str(dataStruct.testData(ii,5)) sep ...      Re-test
+    num2str(dataStruct.testData(ii,2)) "\n"]); ##        Evaluation
+  endfor
+  fclose(fid);
+end
+###################################
 function nextTraining(hObject, eventdata)
   dataStruct = guidata(hObject);
   if dataStruct.testData(dataStruct.stimuliTested, 3) == 0
 
-		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour √©couter le son."));
+		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour Ècouter le son."));
 		
 	elseif dataStruct.testData(dataStruct.stimuliTested, 2) == -1
 		
@@ -174,7 +213,7 @@ function next(hObject, eventdata)
   dataStruct = guidata(hObject);
   if dataStruct.testData(dataStruct.stimuliTested, 3) == 0
 
-		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour √©couter le son."));
+		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour Ècouter le son."));
 		
 	elseif dataStruct.testData(dataStruct.stimuliTested, 2) == -1
 		
@@ -208,21 +247,7 @@ function next(hObject, eventdata)
       dataStruct.stimuli = [dataStruct.stimuli(1:stimuliId-1) dataStruct.stimuli(stimuliId+1:end)];
       
       ## save result
-      csvFile = sprintf("participant_%d.csv", dataStruct.testData(1,1));
-		  fid = fopen(csvFile, "w");
-      sep = dataStruct.comaSeparator;
-		  fputs(fid, sprintf("Participant%sSon%sevaluation%snb ecoute son%sre-test\n",sep,sep,sep,sep));
-      ## loop
-      for ii = 1:(dataStruct.stimuliTested - 1)
-			  str = sprintf("%d%s%s%s%d%s%d%s%d\n", ...
-        dataStruct.testData(ii,1), sep,...
-		  	dataStruct.files{dataStruct.testData(ii,4)}, sep,...
-        dataStruct.testData(ii,2),sep, ...
-        dataStruct.testData(ii,3),sep,...
-        dataStruct.testData(ii,5));
-        fputs(fid, str);
-		  endfor
-		  fclose(fid);
+      saveRawDataAsCsv(hObject,eventdata);
       
       set(dataStruct.textNumPair, "string", sprintf("SON %d / %d", ...
       dataStruct.stimuliTested, dataStruct.nStimuli));
@@ -237,53 +262,74 @@ function next(hObject, eventdata)
 				set(hObject, "String", "Enregistrer");
 			endif
     else
-      csvFile = sprintf("participant_%d.csv", dataStruct.testData(1,1));
-		  fid = fopen(csvFile, "w");
-      sep = dataStruct.comaSeparator;
-		  fputs(fid, sprintf("Participant%sSon%sevaluation%snb ecoute son%sre-test\n",sep,sep,sep,sep));
-      for ii = 1:dataStruct.nStimuli
-			  str = sprintf("%d%s%s%s%d%s%d%s%d\n", ...
-        dataStruct.testData(ii,1), sep,...
-		  	dataStruct.files{dataStruct.testData(ii,4)}, sep,...
-			  dataStruct.testData(ii,2),sep, ...
-			  dataStruct.testData(ii,3),sep,...
-        dataStruct.testData(ii,5));
-			  fputs(fid, str);
-		  endfor
-		  fclose(fid);
+      
+      saveRawDataAsCsv(hObject,eventdata);
+
       set(dataStruct.ratingSlider, "visible", "off");
       set(dataStruct.next,"visible", "off");
       set(dataStruct.hSon,"visible", "off");
       set(dataStruct.textTotallyNatural,"visible", "off");
-      set(dataStruct.textNumPair, "string", "Termin√©!");
-      set(dataStruct.textNotNatural,"string","Donn√©es enregistr√©es",...
+      set(dataStruct.graduations, "visible", "off");
+      set(dataStruct.textNumPair, "string", "TerminÈ!");
+      set(dataStruct.textNotNatural,"string","DonnÈes enregistrÈes",...
       "units", "normalized","position",[0.3 0.5 0.4 0.1]);
       
+      #################################
+      ## Order the data in human  readable way 
+      #################################
+      
+      csvFile = sprintf("participant_%d.csv", dataStruct.testData(1,1));
+      sep = dataStruct.comaSeparator;
       fid1 = fopen(csvFile);
-      t = textscan(fid1,"%s %s %s %s %s", 'delimiter', sep);
+      t = textscan(fid1,"%s %s %s %s %s %s %s %s %s", 'delimiter', sep);
       fclose(fid1);
       
       m = cell2mat(t);
-      res = sortrows(m(2:end,:),2);
+##      res = sortrows(m(2:end,:),2);
+      res = sortrows(m(2:end,:),4); # sort according to phoneme
+      res = sortrows(res, 3);       # sort according to gender
+      res = sortrows(res, 5);       # sort according to voice quality
+      res = sortrows(res, 6);       # sort acording to condition
       
-      idx = strcmp({res{:,5}},'1');
+      idx = strcmp({res{:,8}},'1');
       res_retest = res(idx,:);
       res = res(~idx,:);
-      result = [res(:,1:2) res(:,4) res(:,3) res_retest(:,4) res_retest(:,3)];
+      result = [res(:,1:7) res(:,9) res_retest(:,7) res_retest(:,9)];
       
       fid2 = fopen(dataStruct.csvFile_ordered, "w");
-      fputs(fid2, sprintf("%s%stest%stest%sre-test%sre-test\n", sep,sep, sep, sep, sep));
-      fputs(fid2, sprintf("Participant%sSon%snb ecoute son%sevaluation%snb ecoute son%sevaluation\n", sep,sep, sep, sep, sep));
-      
+      ## generate header
+      fputs(fid2, [sep ...
+      sep ...
+      sep ...
+      sep ...
+      sep ...
+      sep ...
+      "Test" sep ...
+      "Test" sep ...
+      "Re-test" sep ...
+      "Re-test\n"]);
+      fputs(fid2, ["participant" sep ...
+      "File name" sep ...
+      "Gender" sep ...
+      "Vowel" sep ...
+      "Voice quality" sep ...
+      "Condition" sep ...
+      "Num listen" sep ...
+      "Evaluation" sep ...
+      "Num listen" sep ...
+      "Evaluation\n"]);
+      ## write data
       for i = 1:size(result,1)
-        str = sprintf("%s%s%s%s%s%s%s%s%s%s%s\n", ...
-        result{i,1}, sep, ...
-        result{i,2}, sep, ...
-        result{i,3}, sep, ...
-        result{i,4}, sep, ...
-        result{i,5}, sep, ...
-        result{i,6});
-        fputs(fid2, str);
+        fputs(fid2, [result{i,1} sep ...
+        result{i,2} sep ...
+        result{i,3} sep ...
+        result{i,4} sep ...
+        result{i,5} sep ...
+        result{i,6} sep ...
+        result{i,7} sep ...
+        result{i,8} sep ...
+        result{i,9} sep ...
+        result{i,10} "\n"]);
       endfor
       fclose(fid2);
       
