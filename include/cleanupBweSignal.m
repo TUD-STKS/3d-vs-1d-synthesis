@@ -4,20 +4,23 @@ function y = cleanupBweSignal(y, sil)
 %   parts around the speech signal. This function gets rid of those by
 %   fading the actual speech signal in and out.
 %
-%   y: Bandwith-extended speech signal consisting of [silence, speech,
+%   y: Bandwidth-extended speech signal consisting of [silence, speech,
 %   silence]
 %   sil: Duration of the symmetric (!) silence before and after the
 %   speech
 
-% Number of non-silent samples (with a little bit of slack)
-nSpeech = length(y) - floor(1.8*sil);
+% Number of non-silent samples
+nSpeech = length(y) - floor(2.2*sil);
 
 % Fading part of the window
-win = tukeywin(nSpeech, 0.05);
+win = tukeywin(nSpeech, 0.1);
 
 % Extend by zeros
 win = padarray(win, floor((length(y) - length(win)) / 2), 'pre');
 win = padarray(win, length(y) - length(win), 'post');
+
+% Move window back a little bit to get rid of noise tail
+win = circshift(win, floor(-0.1*sil));
 
 y = y .* win;
 end

@@ -13,7 +13,7 @@ addpath('../include/bandwidth_extension/utilities')
 global path_to_GMM;
 path_to_GMM = '../include/bandwidth_extension/ABE_explicit_memory_ICASSP18/2_GMM_training/existing_models/';
 
-past_frames = 2; future_frames=2; inp_feature= 'LogMFE_zs_pca'; dimX=10; dimY=10; 
+past_frames = 1; future_frames=1; inp_feature= 'LogMFE_zs_pca'; dimX=10; dimY=10; 
 x_wb = logmfe_lpc_abe(x_nb, inp_feature, past_frames, future_frames, dimX, dimY);
 
 if size(x_wb,1)==1

@@ -1,6 +1,10 @@
 %% Generation of the stimuli for the listening experiments
 
 clc; close all; clearvars;
+% Make BWE results reproducible
+rng(17); % Tiny artifact in male /u/
+ 
+
 %%
 addpath('../include')
 addpath('../include/bandwidth_extension')
@@ -9,7 +13,7 @@ addpath('../include/VocalTractLabApi')
 
 load('filters.mat');
 
-plot_blended_tf = true;
+plot_blended_tf = false;
 
 %% Transfer functions
 tf_mm_path = '../transfer-functions/multimodal';
@@ -78,9 +82,14 @@ p_female = padarray(natural_ref.pressure_contour, length(Ug.female) - length(nat
 Ug.male = Ug.male .* p_male;
 Ug.female = Ug.female .* p_female;
 
-% Add initial and final silence
-Ug.male = padarray(Ug.male, floor(sil_s * Fs_out), 'both');
-Ug.female = padarray(Ug.female, floor(sil_s * Fs_out), 'both');
+% Add final silence 
+Ug.male = padarray(Ug.male, floor(sil_s * Fs_out) - length(Ug.male) + length(natural_ref.pressure_contour), 'post');
+Ug.female = padarray(Ug.female, floor(sil_s * Fs_out) - length(Ug.female) + length(natural_ref.pressure_contour), 'post');
+
+% Add initial
+Ug.male = padarray(Ug.male, floor(sil_s * Fs_out), 'pre');
+Ug.female = padarray(Ug.female, floor(sil_s * Fs_out), 'pre');
+
 %% Synthesize
 playlist = {};
 for file = tf_mm_files'
