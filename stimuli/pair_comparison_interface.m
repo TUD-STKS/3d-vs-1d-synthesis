@@ -36,7 +36,7 @@ end
 ## pairs, the indexes of the pairs (1 to num of pairs), the index
 ## of the pair currently tested, the data to save in the csv file 
 
-testMode = true;
+testMode = false;
 
 if testMode
   ## To test the interface with a minimal number of stimuli
