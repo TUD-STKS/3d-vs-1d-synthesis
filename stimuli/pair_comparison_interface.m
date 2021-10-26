@@ -214,13 +214,13 @@ function rateSon1MostNatural(hObject, eventdata)
 	set(hObject, "backgroundcolor", [0/255 85/255 212/255], "fontweight", "bold");
 	set(st.hSon2MostNatural, "backgroundcolor", [1 1 1], "fontweight", "normal");
   
-  ## go to next pair
-  st.currTrainingPair;
-  if st.currTrainingPair < 3
-    nextPairTraining(hObject, eventdata);
-  else
-    nextPair(hObject, eventdata);
-  end
+##  ## go to next pair
+##  st.currTrainingPair;
+##  if st.currTrainingPair < 3
+##    nextPairTraining(hObject, eventdata);
+##  else
+##    nextPair(hObject, eventdata);
+##  end
 end
 
 # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -240,13 +240,13 @@ function rateSon2MostNatural(hObject, eventdata)
 	set(hObject, "backgroundcolor", [0/255 85/255 212/255], "fontweight", "bold");
 	set(st.hSon1MostNatural, "backgroundcolor", [1 1 1], "fontweight", "normal");
   
-  ## go to next pair
-  st.currTrainingPair;
-  if st.currTrainingPair < 3
-    nextPairTraining(hObject, eventdata);
-  else
-    nextPair(hObject, eventdata);
-  end
+##  ## go to next pair
+##  st.currTrainingPair;
+##  if st.currTrainingPair < 3
+##    nextPairTraining(hObject, eventdata);
+##  else
+##    nextPair(hObject, eventdata);
+##  end
 end
 
 # # # # # # # # # # # # # # # # # # # # # # # # 
@@ -342,9 +342,9 @@ function nextPairTraining(hObject, eventdata)
 
 			guidata(hObject, dataStruct);
       
-      ## play sounds
-      playSound1 (hObject, eventdata);
-      playSound2 (hObject, eventdata);
+##      ## play sounds
+##      playSound1 (hObject, eventdata);
+##      playSound2 (hObject, eventdata);
       
       ## reset selected buttons highlight
 	  	set(dataStruct.hSon2MostNatural, "backgroundcolor", [1 1 1], "fontweight", "normal");
@@ -370,9 +370,9 @@ function nextPairTraining(hObject, eventdata)
 			set(dataStruct.next, "callback", @nextPair);
 			guidata(hObject, dataStruct);
       
-      ## play sounds
-      playSound1 (hObject, eventdata);
-      playSound2 (hObject, eventdata);
+##      ## play sounds
+##      playSound1 (hObject, eventdata);
+##      playSound2 (hObject, eventdata);
       
       ## reset selected buttons highlight
 	  	set(dataStruct.hSon2MostNatural, "backgroundcolor", [1 1 1], "fontweight", "normal");
@@ -494,9 +494,9 @@ function nextPair (hObject, eventdata)
 			dataStruct.pairTested, dataStruct.nPairs));
 			guidata(hObject, dataStruct);
       
-      ## play sounds
-      playSound1 (hObject, eventdata);
-      playSound2 (hObject, eventdata);
+##      ## play sounds
+##      playSound1 (hObject, eventdata);
+##      playSound2 (hObject, eventdata);
 
 		else
     
@@ -649,7 +649,7 @@ dataStruct.hSon2MostNatural = uicontrol (h, "string", "Le son 2\n est le \nplus 
 dataStruct.next = uicontrol (h, "string", "Paire suivante", ...
 "units","normalized","position",[0.65 0.18 0.25 0.08],...
 "callback", @nextPairTraining, "fontunits","normalized","fontsize", normFtSize,...
-"visible", "off");
+"visible", "on");
 
 
 guidata(h, dataStruct);
