@@ -1,0 +1,23 @@
+Meeting on October 18th, 2021
+
+1. New stimuli generation using natural reference values for f0 and envelope is OK.
+
+2. Metallic noise in BWE stimuli is due to the methods themselves. The BWE modality is therefore just a kind of "control" modality that shows that it matters what happens in the high frequency range. 
+
+3. Stimuli are now final.
+
+4. Results of pretests regarding the interface revealed that the pretest was not done on the final interface version.
+
+5. Rémi showed the current interfaces of the two tasks and collected feedback to further improve the interface.
+
+
+
+To Do:
+Rémi sends final stimuli to Angélique after checking the loudness normalization.
+Rémi incorporates the feedback into the interfaces for the two tasks. He then sends it to Angélique for a round of feedback from just Angélique and Camille and then another pretest.
+Rémi finalizes the result file format.
+
+Next meeting:
+November 3rd, 2 pm
+
+
