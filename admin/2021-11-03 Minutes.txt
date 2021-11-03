@@ -1,0 +1,28 @@
+Final version of stimuli and interface accepted after feedback from Camille and Angélique.
+Angélique has submitted the ethics committee application and taken care of the insurance.
+Mr. Kaiser will be compensated for the calibration out of Rémi's grant budget (same as for the last study).
+
+Originally, there was no plan to compensate the participants. 
+Peter offers 800 EUR for compensation. Angélique will check if this requires changes to the ethics application.
+
+
+Experimental setup:
+Loudspeaker calibrated at 70 dB at distance of 1 m in front of the loudspeaker (= the position of the subjects).
+1.5 hours per participant. 35 to 45 participants are planned.
+
+Target start date:
+End of January
+
+Publication plan:
+Journal article submission in April (to JASA? IEEE T-ASL?)
+Simon and Rémi are starting the manuscript ASAP.
+
+Statistical evaluation:
+We will re-use the methods from the previous study but confirm with statisticians from the TUD.
+
+
+To Do:
+Rémi contacts Mr. Kaiser to discuss the loudspeaker calibration.
+Angélique will do a pretest with Camille to finalize the experimental protocol.
+After that, Angélique and Camille will start the subject recruitment and testing.
+Simon and Rémi will start writing the article.
