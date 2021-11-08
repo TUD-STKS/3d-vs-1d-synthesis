@@ -55,6 +55,6 @@ end
 % Apply a gentle low-pass filter to the shaped noise
 Hd = designNoiseFilter(Fs);
 noise_filt = Hd(noise);
-glottalFlow = x .* (1 + 10^(-SNR/20) * noise);
+glottalFlow = x .* (1 + 10^(-SNR/20) * noise_filt);
 
 end
