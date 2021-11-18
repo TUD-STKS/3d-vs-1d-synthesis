@@ -20,7 +20,7 @@ hs = inputdlg (prompt, "Entrer le numero du participant", rowscols) ;
 subject = str2num(hs{1});
 if exist(sprintf("participant_%d.csv", subject),'file')!=0
   
-  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe déjà.", subject));
+  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe dï¿½jï¿½.", subject));
 
 end
 ## test data
@@ -49,9 +49,9 @@ if testMode
   {{"f_a_MM_MM_modal.wav", "f_e_MM_MM_modal.wav",...
   "f_a_MM_1d_modal.wav", "f_e_MM_1d_modal.wav",...
   "f_a_MM_bwe_modal.wav", "f_e_MM_bwe_modal.wav",...
-  "m_a_MM_bwe_modal.wav",... 	# training stimuli
-  "m_a_MM_1d_modal.wav",...  # training stimuli
-  "m_a_MM_MM_modal.wav",...  # training stimuli
+  "m_Y_MM_bwe_modal.wav",... 	# training stimuli
+  "m_Y_MM_1d_modal.wav",...  # training stimuli
+  "m_Y_MM_MM_modal.wav",...  # training stimuli
   }}, ...
   "sndNames", ...
   {{"f_a_MM", "f_e_MM",...
@@ -85,7 +85,7 @@ else
     endfor
   endfor
   strCreateDataStruct = [strCreateDataStruct ...
-  """m_a_MM_bwe_modal.wav"", ""m_a_MM_1d_modal.wav"", ""m_a_MM_MM_modal.wav"""...
+  """m_Y_MM_bwe_modal.wav"", ""m_Y_MM_1d_modal.wav"", ""m_Y_MM_MM_modal.wav"""...
   "}},""sndNames"", {{"...
   strSndNames(1:end-1) "}}, " ...
   """grpNames"", {{""MM-1D"", ""MM-BWE"", ""1D-BWE""}},"...
@@ -318,7 +318,7 @@ function nextPairTraining(hObject, eventdata)
 	if or(dataStruct.testData(dataStruct.pairTested, 5) == 0,
     dataStruct.testData(dataStruct.pairTested, 6) == 0) 
 
-		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour écouter les sons à  comparer."));
+		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour ï¿½couter les sons ï¿½ï¿½ comparer."));
 		
 	elseif dataStruct.testData(dataStruct.pairTested, 7) == -1
 		
@@ -392,7 +392,7 @@ function nextPair (hObject, eventdata)
 	## check if the sounds have been listened
 	if or(dataStruct.testData(dataStruct.pairTested, 5) == 0,
     dataStruct.testData(dataStruct.pairTested, 6) == 0) 
-		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour écouter les sons à  comparer."));
+		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Son 1] et [Son 2] pour ï¿½couter les sons ï¿½ï¿½ comparer."));
   ## check if the previous pair have been rated
 	elseif dataStruct.testData(dataStruct.pairTested, 7) == -1
 		errordlg (sprintf("Veuillez cliquer sur les boutons \n[Le son 1 est le plus naturel] ou [Le son 2 est le plus naturel]."));
@@ -502,9 +502,9 @@ function nextPair (hObject, eventdata)
     
       writeRawDataToCsv(hObject, eventdata);
       
-			set(dataStruct.textNumPair, "string", "Terminé!");
+			set(dataStruct.textNumPair, "string", "Terminï¿½!");
 			#X = dataStruct.X; Y = dataStruct.Y;
-			set(dataStruct.textQuestion, "string", "Données enregistrées");
+			set(dataStruct.textQuestion, "string", "Donnï¿½es enregistrï¿½es");
 			set(dataStruct.hSon1, "visible", "off");
 			set(dataStruct.hSon2, "visible", "off");
 			set(dataStruct.hSon2MostNatural, "visible", "off");

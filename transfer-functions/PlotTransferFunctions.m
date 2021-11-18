@@ -4,7 +4,7 @@ clc; close all; clearvars;
 addpath('../include')
 
 %% Parameters
-fc_hi = 10e3;  % Upper cutoff frequency for transfer function display
+fc_hi = 12e3;  % Upper cutoff frequency for transfer function display
 
 % Input
 tf_mm_files = dir('multimodal/*.txt');
@@ -18,7 +18,7 @@ vtl_formantFilepath_male = '1d/m__formants_1d.csv';
 vtl_formantFilepath_female = '1d/f__formants_1d.csv';
 
 %%
-sounds = ["a", "e", "i", "o", "u"];
+sounds = ["a", "e", "i", "o", "u", "Y"];
 gender = ["m", "f"];
 
 %% Baseline VTL
