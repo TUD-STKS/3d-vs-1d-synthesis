@@ -24,7 +24,8 @@ if sex == "m"
     "e_no-pf",
     "i_no-pf",
     "o_no-pf",
-    "u_no-pf"
+    "u_no-pf",
+    "Y"
     ];
 elseif sex == "f"
     vtl = VTL('../speaker-files/female.speaker');

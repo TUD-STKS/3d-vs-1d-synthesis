@@ -24,7 +24,7 @@ rowscols = [1];
 hs = inputdlg (prompt, "Entrer le numero du participant", rowscols) ;	
 subject = str2num(hs{1});
 if exist(sprintf("participant_%d.csv", subject),'file')!=0
-  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe déjà .", subject));
+  warndlg(sprintf("Le fichier <participant\\_%d.csv> existe dï¿½jï¿½ï¿½.", subject));
 end
 
 
@@ -44,7 +44,7 @@ if testMode
   "dirStimuli", "dev/",
   "files", {{ "f_a_MM_MM_modal.wav", ...
   "m_a_MM_MM_modal.wav", ...
-  "m_u_MM_bwe_pressed.wav", "m_o_MM_MM_modal.wav",... 	# training stimuli
+  "m_Y_MM_bwe_pressed.wav", "m_Y_MM_MM_modal.wav",... 	# training stimuli
   }}, ...
   "sndNames", ...
   {{"f_a_MM", "m_a_MM", "m_u_MM", "m_o_MM"}}, ...
@@ -74,7 +74,7 @@ else
     end
   end
   strCreateDataStruct = [strCreateDataStruct ...
-  """m_a_MM_MM_modal.wav"", ""f_a_MM_1d_modal.wav""}}, "...
+  """m_Y_MM_bwe_pressed.wav"", ""m_Y_MM_1d_modal.wav""}}, "...
   """sndNames"", {{" strSndNames """m_a_MM_modal"", ""f_a_1d_modal""}}," ...
   """nStimuli"", " num2str(2*nStimuli) ", ""stimuliTested"", 1, ""stimuli"","...
   "[1:nStimuli 1:nStimuli], ""testData"", zeros(2*nStimuli,5)," ...
@@ -164,7 +164,7 @@ function nextTraining(hObject, eventdata)
   dataStruct = guidata(hObject);
   if dataStruct.testData(dataStruct.stimuliTested, 3) == 0
 
-		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour écouter le son."));
+		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour ï¿½couter le son."));
 		
 	elseif dataStruct.testData(dataStruct.stimuliTested, 2) == -1
 		
@@ -213,7 +213,7 @@ function next(hObject, eventdata)
   dataStruct = guidata(hObject);
   if dataStruct.testData(dataStruct.stimuliTested, 3) == 0
 
-		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour écouter le son."));
+		errordlg (sprintf("Veuillez cliquer sur le bouton [Son] pour ï¿½couter le son."));
 		
 	elseif dataStruct.testData(dataStruct.stimuliTested, 2) == -1
 		
@@ -270,8 +270,8 @@ function next(hObject, eventdata)
       set(dataStruct.hSon,"visible", "off");
       set(dataStruct.textTotallyNatural,"visible", "off");
       set(dataStruct.graduations, "visible", "off");
-      set(dataStruct.textNumPair, "string", "Terminé!");
-      set(dataStruct.textNotNatural,"string","Données enregistrées",...
+      set(dataStruct.textNumPair, "string", "Terminï¿½!");
+      set(dataStruct.textNotNatural,"string","Donnï¿½es enregistrï¿½es",...
       "units", "normalized","position",[0.3 0.5 0.4 0.1]);
       
       #################################

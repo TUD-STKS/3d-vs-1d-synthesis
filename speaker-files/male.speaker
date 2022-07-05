@@ -357,6 +357,27 @@
         <param name="TS2" value="0.0000"/>
         <param name="TS3" value="-0.1000"/>
       </shape>
+      <shape name="Y">
+        <param name="HX" value="0.5400"/>
+        <param name="HY" value="-6.0000"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8200"/>
+        <param name="LP" value="0.8200"/>
+        <param name="LD" value="0.6000"/>
+        <param name="VS" value="0.0000"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.9600"/>
+        <param name="TCY" value="-1.9300"/>
+        <param name="TTX" value="4.4700"/>
+        <param name="TTY" value="-1.5100"/>
+        <param name="TBX" value="2.1800"/>
+        <param name="TBY" value="-0.3700"/>
+        <param name="TRX" value="-1.2833"/>
+        <param name="TRY" value="-2.2322"/>
+        <param name="TS1" value="0.1400"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.1200"/>
+      </shape>
     </shapes>
   </vocal_tract_model>
   <glottis_models>
