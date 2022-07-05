@@ -108,6 +108,10 @@ for file = tf_mm_files'
         elseif tokens{1} == 'f'
             y = synthesize_from_tf(Ug.female(:,vq), tf_mm);
         end
+        
+        % The multimodal transfer functions already only go up to 12 kHz,
+        % so no additional low-pass filter necessary
+        
         [~, item_name, ~] = fileparts(file.name);
         name = [item_name, '_MM_', voice_qualities{vq}, '.wav'];
         filename = fullfile(outpath, name);
