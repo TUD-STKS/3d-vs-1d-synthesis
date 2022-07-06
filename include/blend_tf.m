@@ -14,6 +14,17 @@ function [varargout] = blend_tf(tf_low, tf_high, f_inf, fs, varargin)
 % filter functions. If the string 'dB' or 'db' is supplied as a varargin,
 % the plot is on a semi-log scale.
 
+if nargin == 5
+    if strcmp(varargin{1}, 'dB') || strcmp(varargin{1}, 'db')
+        do_dB = true;
+    else
+            error('Unknown varargin argument passed!')
+    end        
+else
+    do_dB = false;
+end
+
+
 % Design a crossover filter with maximum slope to do the blending
 blendFilter = crossoverFilter(1, f_inf, 48, fs);
 
@@ -38,17 +49,15 @@ else
     [b_lp, a_lp, b_hp, a_hp] = getFilterCoefficients(blendFilter, 1);
     H_lp = abs(freqz([b_lp, a_lp], length(blended_tf), 'whole'));
     H_hp = abs(freqz([b_hp, a_hp], length(blended_tf), 'whole'));
+    H_sum = H_lp + H_hp;
     
-    if nargin == 5
-        if strcmp(varargin{1}, 'dB') || strcmp(varargin{1}, 'db')
+    if do_dB        
             blended_tf = db(blended_tf);
             tf_low = db(tf_low);
             tf_high = db(tf_high);
             H_lp = db(H_lp);
             H_hp = db(H_hp);
-        else
-            error('Unknown varargin argument passed!')
-        end        
+            H_sum = db(H_sum);        
     end
     
     hold on;
@@ -57,15 +66,25 @@ else
     plot(f_Hz(f_Hz < 13e3), tf_high(f_Hz < 13e3), ':');    
     yyaxis right;
 
-    plot(f_Hz(f_Hz < 13e3), H_lp(f_Hz < 13e3), ':');
-    plot(f_Hz(f_Hz < 13e3), H_hp(f_Hz < 13e3), ':');
-    plot(f_Hz(f_Hz < 13e3), H_hp(f_Hz < 13e3) + H_lp(f_Hz < 13e3), ':');
+    plot(f_Hz(f_Hz < 13e3), H_lp(f_Hz < 13e3), '--', 'Color', '#D95319');
+    plot(f_Hz(f_Hz < 13e3), H_hp(f_Hz < 13e3), ':', 'Color', '#D95319');
+    plot(f_Hz(f_Hz < 13e3), H_sum(f_Hz < 13e3), '-.', 'Color', '#D95319');
     hold off;
     xlabel('Frequency $f$ [Hz]')
     yyaxis left;
-    ylabel('Magnitude')
+    if do_dB
+        ylabel('Magnitude [dB]')
+    else
+        ylabel('Magnitude')
+    end
+    
     yyaxis right;
-    ylim([0, 1.1]);
+    if do_dB
+       % ylim([-100, 0.5]); 
+    else
+       ylim([0, 1.1]);
+    end   
+    
     ylabel('Filter responses and their sum')
     
 end

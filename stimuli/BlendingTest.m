@@ -26,8 +26,10 @@ figure(1);
 blend_tf(f_mm, f_1d, f_inf, Fs_Hz, 'dB')
 title(['female /' vowel '/']);
 xlim([0, 12000])
+legend
 
 figure(2);
-blend_tf(m_mm, m_1d, f_inf, Fs_Hz, 'dB')
+blend_tf(m_mm, m_1d, f_inf, Fs_Hz)
 title(['male /' vowel '/']);
+legend('Final TF', 'MM TF', 'TLM TF', 'Blending lowpass', 'Blending highpass', 'Sum of blending filters')
 xlim([0, 12000])
