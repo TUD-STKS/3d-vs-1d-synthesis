@@ -14,12 +14,14 @@ addpath('../include/VocalTractLabApi')
 load('filters.mat');
 
 plot_blended_tf = false;
+save_blended_tf = false;
 
 %% Transfer functions
 tf_mm_path = '../transfer-functions/multimodal';
 tf_mm_files = dir([tf_mm_path, '/*.txt']);
 tf_1d_path = '../transfer-functions/1d';
 tf_1d_files = dir([tf_1d_path, '/*.txt']);
+tf_blended_path = '../transfer-functions/blended';
 
 %% Stimulus file path
 outpath = './dev/';
@@ -32,9 +34,6 @@ sil_s = 0.250;
 
 % Load natural pressure and f0 contours
 natural_ref = load('./ref/pressure_and_pitch.mat');
-
-% Output cutoff frequency
-fc_out = 12e3;
 
 % Fundamental frequencies (expressed as a multiplier on the reference f0)
 f0.male = 1;
@@ -166,6 +165,20 @@ for file = tf_mm_files'
             plot(angle(tf_1d))
             plot(angle(tf_mm))
             xlim([0 1300])
+        end
+        
+        if save_blended_tf
+            % Write the header
+            tf_blend_filename = tf_blended_path + "/" + string(join(tokens(1:2), '_')) + '_blended.txt';
+            fid = fopen(tf_blend_filename, 'w');
+            fprintf(fid, "%s\n", "num_points: " + num2str(length(f_Hz)));
+            fprintf(fid, "%s\n", "frequency_Hz  magnitude  phase_rad");           
+            % Append the data
+            tf_blend_data = [f_Hz, abs(tf_blend), angle(tf_blend)];
+            for row = tf_blend_data'
+                fprintf(fid, "%f  %f  %f\n", row);
+            end
+            fclose(fid)
         end
         
         if tokens{1} == 'm'
