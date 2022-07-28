@@ -24,7 +24,7 @@ cal = 10^((94 - longspecCal.dBspectrum(idx1000)-50)/20);
 longspecNoise=ltas(cal * s,sr,Nfft,win,1,0,1, zeros(Nfft/2+1, 1), 0);
 
 for p = 1:5
-    figure
+    h = figure('position', [740 390 980 340]);
     cnt = 1;
     for g = 1:2
         for vq = 1:2
@@ -45,9 +45,13 @@ for p = 1:5
             plot(longspecNoise.f/1000, longspecNoise.dBspectrum, 'color', [0.5 0.5 0.5], 'linewidth', 2)
             legend(model);
             xlim([0 12000]/1000)
+            ylim([-5 85])
             xlabel('f (kHz)')
-            ylabel('LTAS (dB)')
+            ylabel('SPL (dB)')
+            grid on
             cnt = cnt + 1;
         end
     end
+    svgName = ['ltas_' phonemes{p} '.svg'];
+    print(h, '-dsvg', svgName)
 end
